@@ -5,14 +5,15 @@ import styles from "./Landing.module.css";
 
 const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
+const DESCRIPTION = "I design and build thoughtful digital experiences.";
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
 
 const BOOT_MS = 300;
 const TYPE_MS = 68;
 const HOLD_MS = 720;
-const MORPH_MS = 1180;
-const NAME_MS = 620;
+const MORPH_MS = 1440;
+const NAME_MS = 720;
 
 type Cell = { char: string; scrambling: boolean };
 type Phase = "terminal" | "morph" | "name" | "inflate";
@@ -35,7 +36,7 @@ export default function Landing() {
         timers.push(setTimeout(resolve, ms));
       });
 
-    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+    const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 
     const morph = () =>
       new Promise<void>((resolve) => {
@@ -124,19 +125,24 @@ export default function Landing() {
     <div
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
-      <h1 className={styles.line} aria-label={TARGET}>
-        <span className={styles.text} aria-hidden="true">
-          {cells.map((cell, i) => (
-            <span
-              key={i}
-              className={cell.scrambling ? styles.scramble : styles.glyph}
-            >
-              {cell.char}
-            </span>
-          ))}
-        </span>
-        <span className={styles.cursor} aria-hidden="true" />
-      </h1>
+      <div className={styles.hero}>
+        <h1 className={styles.line} aria-label={TARGET}>
+          <span className={styles.text} aria-hidden="true">
+            {cells.map((cell, i) => (
+              <span
+                key={i}
+                className={cell.scrambling ? styles.scramble : styles.glyph}
+              >
+                {cell.char}
+              </span>
+            ))}
+          </span>
+          <span className={styles.cursor} aria-hidden="true" />
+        </h1>
+        <div className={styles.supporting}>
+          <p className={styles.description}>{DESCRIPTION}</p>
+        </div>
+      </div>
     </div>
   );
 }
