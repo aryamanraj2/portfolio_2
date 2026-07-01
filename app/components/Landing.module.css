@@ -25,9 +25,11 @@
   line-height: 1;
   letter-spacing: -0.01em;
   font-variation-settings: "wght" 560;
+  -webkit-text-stroke: 0 var(--bone);
   transform-origin: left center;
   transition: font-variation-settings 900ms var(--ease-soft),
     letter-spacing 900ms var(--ease-soft), transform 900ms var(--ease-soft),
+    -webkit-text-stroke-width 900ms var(--ease-soft),
     filter 900ms var(--ease-soft);
   will-change: font-variation-settings, transform, filter;
 }
@@ -71,7 +73,8 @@
 
 .inflate .line {
   font-variation-settings: "wght" 900;
-  letter-spacing: -0.025em;
+  -webkit-text-stroke: 0.022em var(--bone);
+  letter-spacing: -0.02em;
   transform: scale(1.035);
 }
 
