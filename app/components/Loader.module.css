@@ -1,0 +1,111 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--ink);
+  display: grid;
+  place-items: center;
+  transition: opacity 900ms var(--ease-soft), filter 900ms var(--ease-soft);
+}
+
+.root.leaving {
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* --- ambient greeting --- */
+.stage {
+  position: relative;
+  width: min(90vw, 60ch);
+  height: 1.2em;
+  display: grid;
+  place-items: center;
+}
+
+.greet {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bone);
+  font-weight: 600;
+  font-size: clamp(2.75rem, 11vw, 8rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  will-change: opacity, filter, transform;
+}
+
+.greet.in {
+  animation: greetIn 620ms var(--ease-soft) both;
+}
+
+.greet.out {
+  animation: greetOut 620ms var(--ease-soft) both;
+}
+
+@keyframes greetIn {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(9px) scale(0.985);
+  }
+  to {
+    opacity: 0.16;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@keyframes greetOut {
+  from {
+    opacity: 0.16;
+    filter: blur(0);
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(-9px) scale(1.015);
+  }
+}
+
+/* --- counter --- */
+.counter {
+  position: fixed;
+  left: clamp(18px, 3.4vw, 40px);
+  bottom: clamp(16px, 3vw, 34px);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 0.15em;
+  opacity: 0.9;
+}
+
+.counter .num {
+  min-width: 2.4ch;
+  text-align: right;
+}
+
+.counter .pct {
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greet.in,
+  .greet.out {
+    animation-duration: 1ms;
+  }
+  .greet.in {
+    opacity: 0.16;
+  }
+  .root.leaving {
+    filter: none;
+  }
+}

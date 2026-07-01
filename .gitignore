@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Production / deploy
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Caches
+.turbo/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Claude workspace files
+.claude/
+
+# OS / editor cruft
+.DS_Store
+*.pem
+.vscode/
