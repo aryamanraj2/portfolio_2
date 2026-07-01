@@ -1,0 +1,107 @@
+.root {
+  position: fixed;
+  inset: 0;
+  padding: clamp(24px, 5vw, 64px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
+}
+
+.root.enter {
+  opacity: 1;
+  transform: none;
+}
+
+.line {
+  display: inline-flex;
+  align-items: baseline;
+  margin: 0;
+  color: var(--bone);
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(2.1rem, 6.4vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variation-settings: "wght" 560;
+  transform-origin: left center;
+  transition: font-variation-settings 900ms var(--ease-soft),
+    letter-spacing 900ms var(--ease-soft), transform 900ms var(--ease-soft),
+    filter 900ms var(--ease-soft);
+  will-change: font-variation-settings, transform, filter;
+}
+
+.text {
+  display: inline;
+  white-space: pre;
+}
+
+.glyph,
+.scramble {
+  display: inline;
+}
+
+.scramble {
+  opacity: 0.5;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.94em;
+  margin-left: 0.14em;
+  background: var(--bone);
+  transform: translateY(0.08em);
+  animation: blink 1s steps(1) infinite;
+}
+
+.terminal .line {
+  font-variation-settings: "wght" 470;
+  letter-spacing: 0.005em;
+}
+
+.morph .line {
+  font-variation-settings: "wght" 520;
+}
+
+.name .line {
+  font-variation-settings: "wght" 620;
+}
+
+.inflate .line {
+  font-variation-settings: "wght" 900;
+  letter-spacing: -0.025em;
+  transform: scale(1.035);
+}
+
+.inflate .cursor {
+  opacity: 0;
+  animation: none;
+  transition: opacity 320ms var(--ease-soft);
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: opacity 200ms linear;
+    transform: none;
+  }
+  .line {
+    transition: font-variation-settings 200ms linear;
+  }
+  .cursor {
+    animation: none;
+    opacity: 0;
+  }
+}

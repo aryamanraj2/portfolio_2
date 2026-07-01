@@ -24,7 +24,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@500,600,700&display=swap"
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@1,500,700,900&display=swap"
           rel="stylesheet"
         />
       </head>
