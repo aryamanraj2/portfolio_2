@@ -5,7 +5,11 @@ import styles from "./Landing.module.css";
 
 const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
-const DESCRIPTION = "I design and build thoughtful digital experiences.";
+const TAGLINE = "Building for iOS and Android.";
+const BIO = [
+  "I'm Aryaman, an undergrad building things.",
+  "I write native apps for iOS and Android, the AI pipelines that run inside them, and the backends behind them.",
+];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
 
@@ -140,7 +144,14 @@ export default function Landing() {
           <span className={styles.cursor} aria-hidden="true" />
         </h1>
         <div className={styles.supporting}>
-          <p className={styles.description}>{DESCRIPTION}</p>
+          <p className={styles.tagline}>{TAGLINE}</p>
+          <div className={styles.bio}>
+            {BIO.map((line, i) => (
+              <p key={i} className={styles.description}>
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
     </div>
