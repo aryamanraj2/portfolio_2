@@ -12,6 +12,7 @@ const TAGLINE = "Building for iOS and Android.";
 const BIO = [
   "I'm Aryaman, an undergrad building things.",
   "I write native apps for iOS and Android, the AI pipelines that run inside them, and the backends behind them.",
+  "I also freelance — building the same for people who need it.",
 ];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
@@ -158,21 +159,12 @@ export default function Landing() {
         </div>
       </div>
       <div className={styles.footer}>
-        <nav className={styles.cta}>
-          <a
-            className={styles.action}
-            href={`https://github.com/${GITHUB_USER}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            get to know me
-            <span className={styles.arrow}>→</span>
-          </a>
+        <div className={styles.cta}>
           <a className={styles.action} href="/resume.pdf" download>
             résumé
             <span className={styles.arrow}>↓</span>
           </a>
-        </nav>
+        </div>
         <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
       </div>
     </div>

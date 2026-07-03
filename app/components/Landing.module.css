@@ -4,8 +4,8 @@
   padding: clamp(24px, 5vw, 64px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: clamp(24px, 5vh, 64px);
+  justify-content: flex-start;
+  gap: clamp(28px, 4vh, 52px);
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
@@ -58,8 +58,8 @@
 .footer {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(24px, 4vw, 64px);
+  justify-content: flex-start;
+  gap: clamp(20px, 3vw, 48px);
   width: 100%;
 }
 
@@ -212,11 +212,15 @@
   transition-delay: 320ms;
 }
 
+.inflate .bio .description:nth-child(3) {
+  transition-delay: 440ms;
+}
+
 .inflate .cta {
   opacity: 1;
   transform: none;
   filter: none;
-  transition-delay: 440ms;
+  transition-delay: 560ms;
 }
 
 @keyframes blink {
