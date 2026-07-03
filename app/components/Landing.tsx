@@ -16,6 +16,13 @@ const BIO = [
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
 
+const LORE = [
+  { role: "Freelance — iOS & Android", org: "Independent", period: "2023 — Now" },
+  { role: "Undergraduate", org: "University", period: "2022 — Now" },
+];
+
+const LORE_MS = 640;
+
 const BOOT_MS = 300;
 const TYPE_MS = 68;
 const HOLD_MS = 720;
@@ -32,6 +39,7 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
+  const [lore, setLore] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,7 +104,9 @@ export default function Landing() {
         setCells(settled(TARGET));
         setPhase("name");
         await sleep(300);
-        if (!cancelled) setPhase("inflate");
+        if (cancelled) return;
+        setPhase("inflate");
+        setLore(true);
         return;
       }
 
@@ -117,6 +127,10 @@ export default function Landing() {
       await sleep(NAME_MS);
       if (cancelled) return;
       setPhase("inflate");
+
+      await sleep(LORE_MS);
+      if (cancelled) return;
+      setLore(true);
     };
 
     run();
@@ -130,7 +144,9 @@ export default function Landing() {
 
   return (
     <div
-      className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
+      className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""} ${
+        lore ? styles.loreShown : ""
+      }`}
     >
       <div className={styles.hero}>
         <h1 className={styles.line} aria-label={TARGET}>
@@ -166,6 +182,22 @@ export default function Landing() {
         </div>
         <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
       </div>
+      <section className={styles.lore} aria-label="Lore">
+        <h2 className={styles.loreTitle}>Lore</h2>
+        <ol className={styles.entries}>
+          {LORE.map((item, i) => (
+            <li key={i} className={styles.entry}>
+              <span className={styles.entryArrow} aria-hidden="true" />
+              <div className={styles.entryBody}>
+                <span className={styles.entryRole}>{item.role}</span>
+                <span className={styles.entryMeta}>
+                  {item.org} · {item.period}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
     </div>
   );
 }
