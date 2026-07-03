@@ -3,8 +3,9 @@
   inset: 0;
   padding: clamp(24px, 5vw, 64px);
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(24px, 5vh, 64px);
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
@@ -52,6 +53,53 @@
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 1.2vw, 18px);
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 64px);
+  width: 100%;
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1vw, 16px);
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(7px);
+  transition: opacity 820ms var(--ease-soft), transform 820ms var(--ease-soft),
+    filter 820ms var(--ease-soft);
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  width: max-content;
+  color: var(--bone);
+  text-decoration: none;
+  font-size: clamp(0.98rem, 1.5vw, 1.24rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  opacity: 0.6;
+  transition: opacity 320ms var(--ease-soft), transform 320ms var(--ease-soft);
+}
+
+.action:hover {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 320ms var(--ease-soft);
+}
+
+.action:hover .arrow {
+  transform: translateX(3px);
 }
 
 .tagline,
@@ -164,6 +212,13 @@
   transition-delay: 320ms;
 }
 
+.inflate .cta {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition-delay: 440ms;
+}
+
 @keyframes blink {
   0%,
   49% {
@@ -175,10 +230,25 @@
   }
 }
 
+@media (max-width: 720px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(20px, 6vw, 32px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .root {
     transition: opacity 200ms linear;
     transform: none;
+  }
+
+  .cta {
+    transition: opacity 200ms linear;
+    transform: none;
+    filter: none;
+    transition-delay: 0ms;
   }
   .line {
     transition: font-variation-settings 200ms linear;

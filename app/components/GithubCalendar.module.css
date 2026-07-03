@@ -1,0 +1,101 @@
+.root {
+  --cell: clamp(8px, 0.9vw, 12px);
+  --cell-gap: clamp(2px, 0.28vw, 4px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(10px, 1.2vw, 16px);
+  margin: 0;
+  max-width: 100%;
+}
+
+.caption {
+  color: var(--bone);
+  font-size: clamp(0.72rem, 0.95vw, 0.9rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(6px);
+  transition: opacity 820ms var(--ease-soft), transform 820ms var(--ease-soft),
+    filter 820ms var(--ease-soft);
+}
+
+.active .caption {
+  opacity: 0.42;
+  transform: none;
+  filter: none;
+  transition-delay: 220ms;
+}
+
+.grid {
+  display: flex;
+  gap: var(--cell-gap);
+  max-width: 100%;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1200ms var(--ease-soft);
+}
+
+.active .grid {
+  clip-path: inset(0 0 0 0);
+  transition-delay: 120ms;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cell-gap);
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 2px;
+  background: rgba(255, 255, 227, 0.05);
+}
+
+.l0 {
+  background: rgba(255, 255, 227, 0.05);
+}
+
+.l1 {
+  background: rgba(255, 255, 227, 0.16);
+}
+
+.l2 {
+  background: rgba(255, 255, 227, 0.34);
+}
+
+.l3 {
+  background: rgba(255, 255, 227, 0.62);
+}
+
+.l4 {
+  background: rgba(255, 255, 227, 0.95);
+}
+
+@media (max-width: 720px) {
+  .root {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .grid {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caption {
+    transition: opacity 200ms linear;
+    transform: none;
+    filter: none;
+    transition-delay: 0ms;
+  }
+
+  .grid {
+    clip-path: none;
+    transition: none;
+  }
+}

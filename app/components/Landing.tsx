@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import styles from "./Landing.module.css";
+import GithubCalendar from "./GithubCalendar";
+
+const GITHUB_USER = "aryamanraj2";
 
 const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
@@ -153,6 +156,24 @@ export default function Landing() {
             ))}
           </div>
         </div>
+      </div>
+      <div className={styles.footer}>
+        <nav className={styles.cta}>
+          <a
+            className={styles.action}
+            href={`https://github.com/${GITHUB_USER}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            get to know me
+            <span className={styles.arrow}>→</span>
+          </a>
+          <a className={styles.action} href="/resume.pdf" download>
+            résumé
+            <span className={styles.arrow}>↓</span>
+          </a>
+        </nav>
+        <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
       </div>
     </div>
   );
