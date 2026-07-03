@@ -57,8 +57,8 @@
 
 .footer {
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: clamp(20px, 3vw, 48px);
   width: 100%;
 }
@@ -212,15 +212,11 @@
   transition-delay: 320ms;
 }
 
-.inflate .bio .description:nth-child(3) {
-  transition-delay: 440ms;
-}
-
 .inflate .cta {
   opacity: 1;
   transform: none;
   filter: none;
-  transition-delay: 560ms;
+  transition-delay: 440ms;
 }
 
 @keyframes blink {

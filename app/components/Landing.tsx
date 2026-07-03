@@ -10,9 +10,8 @@ const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
 const TAGLINE = "Building for iOS and Android.";
 const BIO = [
-  "I'm Aryaman, an undergrad building things.",
+  "I'm Aryaman — an undergrad and freelancer, building things.",
   "I write native apps for iOS and Android, the AI pipelines that run inside them, and the backends behind them.",
-  "I also freelance — building the same for people who need it.",
 ];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
