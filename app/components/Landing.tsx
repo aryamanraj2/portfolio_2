@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
+import Lore from "./Lore";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -15,11 +16,6 @@ const BIO = [
 ];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
-
-const LORE = [
-  { role: "Freelance — iOS & Android", org: "Independent", period: "2023 — Now" },
-  { role: "Undergraduate", org: "University", period: "2022 — Now" },
-];
 
 const LORE_MS = 640;
 
@@ -184,19 +180,7 @@ export default function Landing() {
       </div>
       <section className={styles.lore} aria-label="Lore">
         <h2 className={styles.loreTitle}>Lore</h2>
-        <ol className={styles.entries}>
-          {LORE.map((item, i) => (
-            <li key={i} className={styles.entry}>
-              <span className={styles.entryArrow} aria-hidden="true" />
-              <div className={styles.entryBody}>
-                <span className={styles.entryRole}>{item.role}</span>
-                <span className={styles.entryMeta}>
-                  {item.org} · {item.period}
-                </span>
-              </div>
-            </li>
-          ))}
-        </ol>
+        {lore && <Lore />}
       </section>
     </div>
   );

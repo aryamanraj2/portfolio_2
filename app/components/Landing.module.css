@@ -65,6 +65,7 @@
 
 .cta {
   display: flex;
+  
   flex-direction: column;
   gap: clamp(10px, 1vw, 16px);
   opacity: 0;
@@ -241,111 +242,11 @@
     filter 720ms var(--ease-soft);
 }
 
-.entries {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(12px, 1.4vw, 20px);
-}
-
-.entry {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 1.6vw, 24px);
-}
-
-.entryArrow {
-  position: relative;
-  flex: none;
-  width: 0;
-  height: 1px;
-  background: var(--bone);
-  opacity: 0.7;
-  transition: width 760ms var(--ease-soft);
-}
-
-.entryArrow::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  border-top: 1px solid var(--bone);
-  border-right: 1px solid var(--bone);
-  transform: translateY(-50%) rotate(45deg);
-  transform-origin: right center;
-  opacity: 0;
-  transition: opacity 260ms var(--ease-soft);
-}
-
-.entryBody {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  opacity: 0;
-  transform: translateX(-8px);
-  filter: blur(6px);
-  transition: opacity 640ms var(--ease-soft), transform 640ms var(--ease-soft),
-    filter 640ms var(--ease-soft);
-}
-
-.entryRole {
-  color: var(--bone);
-  font-size: clamp(1rem, 1.6vw, 1.3rem);
-  font-weight: 560;
-  letter-spacing: -0.012em;
-  line-height: 1.2;
-}
-
-.entryMeta {
-  color: var(--bone);
-  opacity: 0.55;
-  font-size: clamp(0.84rem, 1.2vw, 1rem);
-  font-weight: 500;
-  letter-spacing: -0.006em;
-}
-
 .loreShown .loreTitle {
   opacity: 1;
   transform: none;
   filter: none;
-}
-
-.loreShown .entry .entryArrow {
-  width: clamp(30px, 4.5vw, 64px);
-}
-
-.loreShown .entry .entryArrow::after {
-  opacity: 1;
-  transition-delay: 520ms;
-}
-
-.loreShown .entry .entryBody {
-  opacity: 1;
-  transform: none;
-  filter: none;
-  transition-delay: 320ms;
-}
-
-.loreShown .loreTitle {
   transition-delay: 40ms;
-}
-
-.loreShown .entries li:nth-child(1) .entryArrow {
-  transition-delay: 160ms;
-}
-
-.loreShown .entries li:nth-child(2) .entryArrow {
-  transition-delay: 300ms;
-}
-
-.loreShown .entries li:nth-child(1) .entryBody {
-  transition-delay: 400ms;
-}
-
-.loreShown .entries li:nth-child(2) .entryBody {
-  transition-delay: 540ms;
 }
 
 @keyframes blink {
@@ -393,17 +294,10 @@
     animation: none;
     opacity: 0;
   }
-  .loreTitle,
-  .entryBody {
+  .loreTitle {
     transition: opacity 200ms linear;
     transform: none;
     filter: none;
     transition-delay: 0ms;
-  }
-  .entryArrow {
-    transition: width 200ms linear;
-  }
-  .entryArrow::after {
-    transition: opacity 200ms linear;
   }
 }
