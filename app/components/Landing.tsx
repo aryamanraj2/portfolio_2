@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
-import Lore from "./Lore";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -16,8 +15,6 @@ const BIO = [
 ];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
-
-const LORE_MS = 640;
 
 const BOOT_MS = 300;
 const TYPE_MS = 68;
@@ -35,7 +32,6 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
-  const [lore, setLore] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -102,7 +98,6 @@ export default function Landing() {
         await sleep(300);
         if (cancelled) return;
         setPhase("inflate");
-        setLore(true);
         return;
       }
 
@@ -123,10 +118,6 @@ export default function Landing() {
       await sleep(NAME_MS);
       if (cancelled) return;
       setPhase("inflate");
-
-      await sleep(LORE_MS);
-      if (cancelled) return;
-      setLore(true);
     };
 
     run();
@@ -140,9 +131,7 @@ export default function Landing() {
 
   return (
     <div
-      className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""} ${
-        lore ? styles.loreShown : ""
-      }`}
+      className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
       <div className={styles.hero}>
         <h1 className={styles.line} aria-label={TARGET}>
@@ -178,10 +167,6 @@ export default function Landing() {
         </div>
         <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
       </div>
-      <section className={styles.lore} aria-label="Lore">
-        <h2 className={styles.loreTitle}>Lore</h2>
-        {lore && <Lore />}
-      </section>
     </div>
   );
 }
