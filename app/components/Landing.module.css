@@ -1,11 +1,8 @@
 .root {
   position: fixed;
   inset: 0;
-  padding: clamp(24px, 5vw, 64px);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: clamp(28px, 4vh, 52px);
+  overflow-x: hidden;
+  overflow-y: auto;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
@@ -14,6 +11,15 @@
 .root.enter {
   opacity: 1;
   transform: none;
+}
+
+.screen {
+  min-height: 100dvh;
+  padding: clamp(24px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(28px, 4vh, 52px);
 }
 
 .hero {
@@ -220,6 +226,46 @@
   transition-delay: 440ms;
 }
 
+.scrollCue {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  width: max-content;
+  color: var(--bone);
+  font-size: clamp(0.82rem, 1.2vw, 0.98rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(7px);
+  transition: opacity 820ms var(--ease-soft), transform 820ms var(--ease-soft),
+    filter 820ms var(--ease-soft);
+}
+
+.scrollCueArrow {
+  display: inline-block;
+  animation: cueBob 1.8s var(--ease-soft) infinite;
+}
+
+.inflate .scrollCue {
+  opacity: 0.55;
+  transform: none;
+  filter: none;
+  transition-delay: 620ms;
+}
+
+@keyframes cueBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
 @keyframes blink {
   0%,
   49% {
@@ -264,5 +310,14 @@
   .cursor {
     animation: none;
     opacity: 0;
+  }
+  .scrollCue {
+    transition: opacity 200ms linear;
+    transform: none;
+    filter: none;
+    transition-delay: 0ms;
+  }
+  .scrollCueArrow {
+    animation: none;
   }
 }

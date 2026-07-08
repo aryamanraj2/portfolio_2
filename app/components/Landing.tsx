@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
+import Lore from "./Lore";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -32,6 +33,7 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -131,42 +133,50 @@ export default function Landing() {
 
   return (
     <div
+      ref={rootRef}
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
-      <div className={styles.hero}>
-        <h1 className={styles.line} aria-label={TARGET}>
-          <span className={styles.text} aria-hidden="true">
-            {cells.map((cell, i) => (
-              <span
-                key={i}
-                className={cell.scrambling ? styles.scramble : styles.glyph}
-              >
-                {cell.char}
-              </span>
-            ))}
-          </span>
-          <span className={styles.cursor} aria-hidden="true" />
-        </h1>
-        <div className={styles.supporting}>
-          <p className={styles.tagline}>{TAGLINE}</p>
-          <div className={styles.bio}>
-            {BIO.map((line, i) => (
-              <p key={i} className={styles.description}>
-                {line}
-              </p>
-            ))}
+      <div className={styles.screen}>
+        <div className={styles.hero}>
+          <h1 className={styles.line} aria-label={TARGET}>
+            <span className={styles.text} aria-hidden="true">
+              {cells.map((cell, i) => (
+                <span
+                  key={i}
+                  className={cell.scrambling ? styles.scramble : styles.glyph}
+                >
+                  {cell.char}
+                </span>
+              ))}
+            </span>
+            <span className={styles.cursor} aria-hidden="true" />
+          </h1>
+          <div className={styles.supporting}>
+            <p className={styles.tagline}>{TAGLINE}</p>
+            <div className={styles.bio}>
+              {BIO.map((line, i) => (
+                <p key={i} className={styles.description}>
+                  {line}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <div className={styles.footer}>
-        <div className={styles.cta}>
-          <a className={styles.action} href="/resume.pdf" download>
-            résumé
-            <span className={styles.arrow}>↓</span>
-          </a>
+        <div className={styles.footer}>
+          <div className={styles.cta}>
+            <a className={styles.action} href="/resume.pdf" download>
+              résumé
+              <span className={styles.arrow}>↓</span>
+            </a>
+          </div>
+          <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
-        <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
+        <span className={styles.scrollCue} aria-hidden="true">
+          lore
+          <span className={styles.scrollCueArrow}>↓</span>
+        </span>
       </div>
+      <Lore scroller={rootRef} active={phase === "inflate"} />
     </div>
   );
 }
