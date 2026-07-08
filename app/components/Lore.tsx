@@ -3,6 +3,7 @@
 import { useEffect, useRef, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight } from "lucide-react";
 import styles from "./Lore.module.css";
 
 type Kind = "experience" | "education" | "achievement";
@@ -79,11 +80,10 @@ export default function Lore({ scroller, active }: LoreProps) {
 
       gsap.from("[data-title]", {
         opacity: 0,
-        y: 26,
-        filter: "blur(8px)",
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: st({ trigger: "[data-title]", start: "top 88%" }),
+        y: 20,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: st({ trigger: "[data-title]", start: "top 90%" }),
       });
 
       const spine = root.querySelector("[data-spine]");
@@ -97,9 +97,9 @@ export default function Lore({ scroller, active }: LoreProps) {
             ease: "none",
             scrollTrigger: st({
               trigger: timeline,
-              start: "top 72%",
-              end: "bottom 62%",
-              scrub: 0.6,
+              start: "top 75%",
+              end: "bottom 75%",
+              scrub: true,
             }),
           }
         );
@@ -107,41 +107,17 @@ export default function Lore({ scroller, active }: LoreProps) {
 
       const rows = gsap.utils.toArray<HTMLElement>("[data-row]");
       rows.forEach((row) => {
-        const dir = row.dataset.side === "right" ? 1 : -1;
-        const tl = gsap.timeline({
+        gsap.from(row, {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          ease: "power2.out",
           scrollTrigger: st({
             trigger: row,
-            start: "top 82%",
+            start: "top 85%",
             toggleActions: "play none none reverse",
           }),
         });
-
-        tl.from(row.querySelector("[data-node]"), {
-          scale: 0,
-          duration: 0.4,
-          ease: "back.out(2.2)",
-        })
-          .from(
-            row.querySelector("[data-connector]"),
-            { scaleX: 0, duration: 0.5, ease: "power3.out" },
-            "-=0.16"
-          )
-          .from(
-            row.querySelector("[data-arrow]"),
-            { opacity: 0, scale: 0, duration: 0.3, ease: "power2.out" },
-            "-=0.08"
-          )
-          .from(
-            row.querySelector("[data-card]"),
-            {
-              opacity: 0,
-              x: dir * -26,
-              filter: "blur(8px)",
-              duration: 0.7,
-              ease: "power3.out",
-            },
-            "-=0.4"
-          );
       });
 
       ScrollTrigger.refresh();
@@ -163,12 +139,16 @@ export default function Lore({ scroller, active }: LoreProps) {
         <div className={styles.timeline} data-timeline>
           <span className={styles.spine} data-spine aria-hidden="true" />
           {ENTRIES.map((entry, i) => {
-            const side = isAchievement(entry.kind) ? "right" : "left";
             const rowClass = `${styles.row} ${
-              side === "right" ? styles.right : styles.left
-            } ${isAchievement(entry.kind) ? styles.standout : ""}`;
+              isAchievement(entry.kind) ? styles.standout : ""
+            }`;
             return (
-              <div key={i} className={rowClass} data-row data-side={side}>
+              <div key={i} className={rowClass} data-row>
+                <span className={styles.node} data-node aria-hidden="true" />
+                <div className={styles.connectorContainer}>
+                  <span className={styles.connector} data-connector aria-hidden="true" />
+                  <ArrowRight className={styles.arrowIcon} data-arrow />
+                </div>
                 <article className={styles.card} data-card>
                   <span className={styles.kind}>{entry.kind}</span>
                   <h3 className={styles.role}>{entry.title}</h3>
@@ -176,17 +156,6 @@ export default function Lore({ scroller, active }: LoreProps) {
                   <span className={styles.period}>{entry.period}</span>
                   {entry.note && <p className={styles.note}>{entry.note}</p>}
                 </article>
-                <span
-                  className={styles.connector}
-                  data-connector
-                  aria-hidden="true"
-                />
-                <span
-                  className={styles.arrowHead}
-                  data-arrow
-                  aria-hidden="true"
-                />
-                <span className={styles.node} data-node aria-hidden="true" />
               </div>
             );
           })}
