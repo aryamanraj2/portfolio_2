@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import styles from "./Lore.module.css";
 
 type Kind = "experience" | "education" | "achievement";
@@ -57,11 +56,36 @@ export default function Lore({ active = true }: { active?: boolean }) {
         <h2 className={styles.title}>Lore</h2>
         <div className={styles.timeline}>
           <span className={styles.spine} aria-hidden="true" />
-          
+
+          <svg width="0" height="0">
+            <defs>
+              <marker
+                id="loreArrowhead"
+                viewBox="0 0 8 8"
+                refX="6.5"
+                refY="4"
+                markerWidth="5.5"
+                markerHeight="5.5"
+                orient="auto-start-reverse"
+              >
+                <path d="M0 0 L8 4 L0 8 Z" fill="rgba(255, 255, 227, 0.85)" />
+              </marker>
+            </defs>
+          </svg>
+
           {ENTRIES.map((entry, i) => (
             <div key={i} className={styles.row}>
-              <span className={styles.branch} aria-hidden="true" />
-              <ChevronRight className={styles.arrowIcon} aria-hidden="true" />
+              <svg
+                className={styles.branch}
+                viewBox="0 0 40 38"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 0 C1 20 16 34 34 34"
+                  markerEnd="url(#loreArrowhead)"
+                />
+              </svg>
               <article className={styles.card}>
                 <span className={styles.kind}>{entry.kind}</span>
                 <h3 className={styles.role}>{entry.title}</h3>
