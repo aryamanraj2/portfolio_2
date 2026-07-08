@@ -64,7 +64,10 @@ export default function Lore({ active = true }: { active?: boolean }) {
                 viewBox="0 0 34 38"
                 aria-hidden="true"
               >
-                <path className={styles.branchLine} d="M1 0 C1 18 9 32 22 32" />
+                <path
+                  className={styles.branchLine}
+                  d="M1 0 C11.5 0 11.5 32 22 32"
+                />
                 <path className={styles.branchHead} d="M22 27 L34 32 L22 37 Z" />
               </svg>
               <article className={styles.card}>
