@@ -172,7 +172,7 @@ export default function Landing() {
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
       </div>
-      <Lore />
+      <Lore active={phase === "inflate"} />
     </div>
   );
 }

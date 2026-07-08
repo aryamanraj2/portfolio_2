@@ -47,9 +47,12 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-export default function Lore() {
+export default function Lore({ active = true }: { active?: boolean }) {
   return (
-    <section className={styles.lore} aria-label="Lore">
+    <section
+      className={`${styles.lore} ${active ? styles.active : ""}`}
+      aria-label="Lore"
+    >
       <div className={styles.inner}>
         <h2 className={styles.title}>Lore</h2>
         <div className={styles.timeline}>
