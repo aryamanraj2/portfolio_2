@@ -57,34 +57,15 @@ export default function Lore({ active = true }: { active?: boolean }) {
         <div className={styles.timeline}>
           <span className={styles.spine} aria-hidden="true" />
 
-          <svg width="0" height="0">
-            <defs>
-              <marker
-                id="loreArrowhead"
-                viewBox="0 0 8 8"
-                refX="6.5"
-                refY="4"
-                markerWidth="5.5"
-                markerHeight="5.5"
-                orient="auto-start-reverse"
-              >
-                <path d="M0 0 L8 4 L0 8 Z" fill="rgba(255, 255, 227, 0.85)" />
-              </marker>
-            </defs>
-          </svg>
-
           {ENTRIES.map((entry, i) => (
             <div key={i} className={styles.row}>
               <svg
                 className={styles.branch}
-                viewBox="0 0 40 38"
-                preserveAspectRatio="none"
+                viewBox="0 0 34 38"
                 aria-hidden="true"
               >
-                <path
-                  d="M1 0 C1 20 16 34 34 34"
-                  markerEnd="url(#loreArrowhead)"
-                />
+                <path className={styles.branchLine} d="M1 0 C1 18 9 32 22 32" />
+                <path className={styles.branchHead} d="M22 27 L34 32 L22 37 Z" />
               </svg>
               <article className={styles.card}>
                 <span className={styles.kind}>{entry.kind}</span>

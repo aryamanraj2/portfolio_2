@@ -90,15 +90,23 @@
   top: -24px;
   left: 10px;
   height: 38px;
-  width: clamp(24px, 4vw, 40px);
-  overflow: visible;
+  width: 34px;
+  opacity: 0.8;
 }
 
-.branch path {
+.branchLine {
   fill: none;
-  stroke: rgba(255, 255, 227, 0.72);
+  stroke: var(--bone);
   stroke-width: 3;
   stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.branchHead {
+  fill: var(--bone);
+  stroke: var(--bone);
+  stroke-width: 1;
+  stroke-linejoin: round;
 }
 
 .card {
