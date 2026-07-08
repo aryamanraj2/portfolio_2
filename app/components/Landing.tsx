@@ -171,12 +171,8 @@ export default function Landing() {
           </div>
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
-        <span className={styles.scrollCue} aria-hidden="true">
-          lore
-          <span className={styles.scrollCueArrow}>↓</span>
-        </span>
       </div>
-      <Lore scroller={rootRef} active={phase === "inflate"} />
+      <Lore />
     </div>
   );
 }

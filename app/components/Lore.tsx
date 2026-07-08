@@ -1,9 +1,4 @@
-"use client";
-
-import { useEffect, useRef, type RefObject } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import styles from "./Lore.module.css";
 
 type Kind = "experience" | "education" | "achievement";
@@ -52,113 +47,29 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-const isAchievement = (kind: Kind) => kind === "achievement";
-
-type LoreProps = {
-  scroller: RefObject<HTMLDivElement | null>;
-  active: boolean;
-};
-
-export default function Lore({ scroller, active }: LoreProps) {
-  const rootRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    const scrollerEl = scroller.current;
-    if (!root || !scrollerEl) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    const ctx = gsap.context(() => {
-      const st = (config: ScrollTrigger.Vars): ScrollTrigger.Vars => ({
-        scroller: scrollerEl,
-        ...config,
-      });
-
-      gsap.from("[data-title]", {
-        opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: st({ trigger: "[data-title]", start: "top 90%" }),
-      });
-
-      const spine = root.querySelector("[data-spine]");
-      const timeline = root.querySelector("[data-timeline]");
-      if (spine && timeline) {
-        gsap.fromTo(
-          spine,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: st({
-              trigger: timeline,
-              start: "top 75%",
-              end: "bottom 75%",
-              scrub: true,
-            }),
-          }
-        );
-      }
-
-      const rows = gsap.utils.toArray<HTMLElement>("[data-row]");
-      rows.forEach((row) => {
-        gsap.from(row, {
-          opacity: 0,
-          y: 20,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: st({
-            trigger: row,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          }),
-        });
-      });
-
-      ScrollTrigger.refresh();
-    }, root);
-
-    return () => ctx.revert();
-  }, [scroller]);
-
-  useEffect(() => {
-    if (active) ScrollTrigger.refresh();
-  }, [active]);
-
+export default function Lore() {
   return (
-    <section ref={rootRef} className={styles.lore} aria-label="Lore">
+    <section className={styles.lore} aria-label="Lore">
       <div className={styles.inner}>
-        <h2 className={styles.title} data-title>
-          Lore
-        </h2>
-        <div className={styles.timeline} data-timeline>
-          <span className={styles.spine} data-spine aria-hidden="true" />
-          {ENTRIES.map((entry, i) => {
-            const rowClass = `${styles.row} ${
-              isAchievement(entry.kind) ? styles.standout : ""
-            }`;
-            return (
-              <div key={i} className={rowClass} data-row>
-                <span className={styles.node} data-node aria-hidden="true" />
-                <div className={styles.connectorContainer}>
-                  <span className={styles.connector} data-connector aria-hidden="true" />
-                  <ArrowRight className={styles.arrowIcon} data-arrow />
-                </div>
-                <article className={styles.card} data-card>
-                  <span className={styles.kind}>{entry.kind}</span>
-                  <h3 className={styles.role}>{entry.title}</h3>
-                  {entry.org && <span className={styles.org}>{entry.org}</span>}
-                  <span className={styles.period}>{entry.period}</span>
-                  {entry.note && <p className={styles.note}>{entry.note}</p>}
-                </article>
-              </div>
-            );
-          })}
+        <h2 className={styles.title}>Lore</h2>
+        <div className={styles.timeline}>
+          <span className={styles.spine} aria-hidden="true" />
+          
+          {ENTRIES.map((entry, i) => (
+            <div key={i} className={styles.row}>
+              <span className={styles.branch} aria-hidden="true" />
+              <ChevronRight className={styles.arrowIcon} aria-hidden="true" />
+              <article className={styles.card}>
+                <span className={styles.kind}>{entry.kind}</span>
+                <h3 className={styles.role}>{entry.title}</h3>
+                {entry.org && <span className={styles.org}>{entry.org}</span>}
+                <span className={styles.period}>{entry.period}</span>
+                {entry.note && <p className={styles.note}>{entry.note}</p>}
+              </article>
+            </div>
+          ))}
+
+          <span className={styles.spineDots} aria-hidden="true" />
         </div>
       </div>
     </section>
