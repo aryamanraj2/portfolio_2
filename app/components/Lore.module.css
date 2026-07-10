@@ -16,7 +16,7 @@
 }
 
 .inner {
-  width: min(100%, 980px);
+  width: min(100%, 1120px);
   display: grid;
   grid-template-columns: minmax(170px, 0.32fr) minmax(0, 1fr);
   gap: clamp(24px, 5vw, 72px);
@@ -42,7 +42,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 5vh, 46px);
+  gap: clamp(32px, 5vh, 50px);
   margin: 0;
   padding: 2px 0 0 clamp(24px, 3vw, 38px);
   list-style: none;
@@ -98,8 +98,192 @@
   transition-delay: 680ms;
 }
 
-.active .entry:nth-child(2) {
-  transition-delay: 840ms;
+.active .entry:nth-child(3) {
+  transition-delay: 1240ms;
+}
+
+.achievementNode {
+  position: relative;
+  min-height: clamp(270px, 33vw, 370px);
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(6px);
+  transition: opacity 780ms var(--ease-soft), transform 780ms var(--ease-soft),
+    filter 780ms var(--ease-soft);
+}
+
+.active .achievementNode {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition-delay: 880ms;
+}
+
+.origin {
+  position: absolute;
+  left: calc(-1 * clamp(24px, 3vw, 38px) - 5px);
+  top: 50%;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 227, 0.82);
+  background: var(--ink);
+  box-shadow: 0 0 0 0 rgba(255, 255, 227, 0.12);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.5);
+  transition: opacity 520ms var(--ease-soft), transform 520ms var(--ease-soft),
+    box-shadow 820ms var(--ease-soft);
+}
+
+.active .origin {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  box-shadow: 0 0 0 9px rgba(255, 255, 227, 0.045);
+  transition-delay: 980ms;
+}
+
+.achievementMeta {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: clamp(122px, 14vw, 168px);
+  transform: translateY(-50%);
+}
+
+.achievements {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(12px, 1.6vw, 18px);
+  min-height: inherit;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.achievement {
+  position: relative;
+  min-height: 86px;
+  padding-left: clamp(210px, 31vw, 350px);
+}
+
+.branch {
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * clamp(24px, 3vw, 38px));
+  width: calc(clamp(210px, 31vw, 350px) + clamp(24px, 3vw, 38px) + 14px);
+  height: 86px;
+  overflow: visible;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.branch path {
+  fill: none;
+  stroke: rgba(255, 255, 227, 0.72);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 227, 0.12));
+  transition: stroke-dashoffset 1180ms var(--ease-soft),
+    opacity 760ms var(--ease-soft);
+}
+
+.active .branch path {
+  stroke-dashoffset: 0;
+}
+
+.active .achievement:nth-child(1) .branch path {
+  transition-delay: 1040ms;
+}
+
+.active .achievement:nth-child(2) .branch path {
+  transition-delay: 1160ms;
+}
+
+.active .achievement:nth-child(3) .branch path {
+  transition-delay: 1280ms;
+}
+
+.achievementCard {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 430px);
+  padding: clamp(13px, 1.4vw, 17px) clamp(14px, 1.7vw, 20px);
+  border-left: 1px solid rgba(255, 255, 227, 0.22);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 227, 0.055),
+    rgba(255, 255, 227, 0.018)
+  );
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft),
+    border-color 420ms var(--ease-soft), background 420ms var(--ease-soft);
+}
+
+.achievementCard:hover {
+  border-color: rgba(255, 255, 227, 0.48);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 227, 0.08),
+    rgba(255, 255, 227, 0.026)
+  );
+}
+
+.active .achievementCard {
+  opacity: 1;
+  transform: none;
+}
+
+.active .achievement:nth-child(1) .achievementCard {
+  transition-delay: 1280ms;
+}
+
+.active .achievement:nth-child(2) .achievementCard {
+  transition-delay: 1410ms;
+}
+
+.active .achievement:nth-child(3) .achievementCard {
+  transition-delay: 1540ms;
+}
+
+.achievementPeriod {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--bone);
+  font-size: clamp(0.7rem, 0.84vw, 0.78rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.38;
+}
+
+.achievementTitle {
+  margin: 0;
+  color: var(--bone);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.14;
+  font-variation-settings: "wght" 740;
+  letter-spacing: 0;
+  opacity: 0.9;
+}
+
+.achievementNote {
+  margin: 7px 0 0;
+  color: var(--bone);
+  font-size: clamp(0.86rem, 1vw, 0.95rem);
+  font-weight: 500;
+  line-height: 1.48;
+  letter-spacing: 0;
+  opacity: 0.54;
 }
 
 .meta,
@@ -170,14 +354,66 @@
     grid-template-columns: 1fr;
     gap: 10px;
   }
+
+  .achievementNode {
+    min-height: auto;
+    padding-top: 4px;
+  }
+
+  .origin {
+    top: 0.62em;
+  }
+
+  .achievementMeta {
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: none;
+    margin-bottom: 18px;
+    transform: none;
+  }
+
+  .achievements {
+    gap: 14px;
+    min-height: auto;
+  }
+
+  .achievement {
+    min-height: auto;
+    padding-left: clamp(34px, 9vw, 58px);
+  }
+
+  .branch {
+    top: 18px;
+    left: calc(-1 * clamp(24px, 3vw, 38px));
+    width: clamp(54px, 13vw, 84px);
+    height: 26px;
+  }
+
+  .achievementCard {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .lore,
-  .entry {
+  .entry,
+  .achievementNode,
+  .achievementCard {
     transition: opacity 200ms linear;
     transform: none;
     filter: none;
     transition-delay: 0ms;
+  }
+
+  .origin {
+    transition: opacity 200ms linear;
+    transform: translateY(-50%) scale(1);
+    transition-delay: 0ms;
+  }
+
+  .branch path {
+    transition: none;
+    stroke-dashoffset: 0;
   }
 }
