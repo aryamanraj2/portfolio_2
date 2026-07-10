@@ -1,48 +1,24 @@
 import styles from "./Lore.module.css";
 
-type Kind = "experience" | "education" | "achievement";
-
 type Entry = {
-  kind: Kind;
-  title: string;
-  org?: string;
+  company: string;
+  role: string;
   period: string;
-  note?: string;
+  note: string;
 };
 
 const ENTRIES: Entry[] = [
   {
-    kind: "achievement",
-    title: "Shipped 3 apps to the App Store",
-    period: "2025",
-    note: "Native iOS releases with on-device AI, live for real users.",
+    company: "Bharti Airtel",
+    role: "SDE Intern",
+    period: "June 2026 - Present",
+    note: "Building an internal platform for monitoring cloud infrastructure. Optimized the backend for faster dashboards and built an AI assistant that turns plain-English questions into safe database queries.",
   },
   {
-    kind: "achievement",
-    title: "Best Mobile App — National Hackathon",
-    period: "2024",
-    note: "Built and demoed a working prototype in 36 hours.",
-  },
-  {
-    kind: "experience",
-    title: "Freelance — iOS & Android",
-    org: "Independent",
-    period: "2023 — Now",
-    note: "Native apps, the AI pipelines inside them, and the backends behind them.",
-  },
-  {
-    kind: "experience",
-    title: "Mobile Engineer Intern",
-    org: "Early-stage Startup",
-    period: "2023",
-    note: "Owned features across the mobile client and API.",
-  },
-  {
-    kind: "education",
-    title: "B.Tech, Computer Science",
-    org: "University",
-    period: "2022 — Now",
-    note: "Systems, machine learning, and a lot of side projects.",
+    company: "NSUT Exam Cell",
+    role: "SDE Intern",
+    period: "May 2025 - July 2025",
+    note: "Built a platform that automated exam scheduling for over 10,000 students, cutting manual paperwork by 70%. Also made a mobile app for staff to manage exam duties and attendance in real time.",
   },
 ];
 
@@ -53,35 +29,23 @@ export default function Lore({ active = true }: { active?: boolean }) {
       aria-label="Lore"
     >
       <div className={styles.inner}>
-        <h2 className={styles.title}>Lore</h2>
-        <div className={styles.timeline}>
-          <span className={styles.spine} aria-hidden="true" />
-
+        <header className={styles.header}>
+          <h2 className={styles.title}>Lore</h2>
+        </header>
+        <ol className={styles.list}>
           {ENTRIES.map((entry, i) => (
-            <div key={i} className={styles.row}>
-              <svg
-                className={styles.branch}
-                viewBox="0 0 34 38"
-                aria-hidden="true"
-              >
-                <path
-                  className={styles.branchLine}
-                  d="M1 0 C11.5 0 11.5 32 22 32"
-                />
-                <path className={styles.branchHead} d="M22 27 L34 32 L22 37 Z" />
-              </svg>
-              <article className={styles.card}>
-                <span className={styles.kind}>{entry.kind}</span>
-                <h3 className={styles.role}>{entry.title}</h3>
-                {entry.org && <span className={styles.org}>{entry.org}</span>}
+            <li key={i} className={styles.entry}>
+              <div className={styles.meta}>
+                <span className={styles.role}>{entry.role}</span>
                 <span className={styles.period}>{entry.period}</span>
-                {entry.note && <p className={styles.note}>{entry.note}</p>}
+              </div>
+              <article className={styles.body}>
+                <h3 className={styles.company}>{entry.company}</h3>
+                <p className={styles.note}>{entry.note}</p>
               </article>
-            </div>
+            </li>
           ))}
-
-          <span className={styles.spineDots} aria-hidden="true" />
-        </div>
+        </ol>
       </div>
     </section>
   );
