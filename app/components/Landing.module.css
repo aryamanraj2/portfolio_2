@@ -15,7 +15,7 @@
 
 .screen {
   padding: clamp(24px, 5vw, 64px);
-  padding-bottom: clamp(40px, 8vh, 80px); /* Some bottom padding before Lore */
+  padding-bottom: clamp(48px, 9vh, 96px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

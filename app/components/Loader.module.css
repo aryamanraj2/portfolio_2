@@ -14,7 +14,6 @@
   pointer-events: none;
 }
 
-/* --- ambient greeting --- */
 .stage {
   position: relative;
   width: min(90vw, 60ch);
@@ -72,7 +71,6 @@
   }
 }
 
-/* --- counter --- */
 .counter {
   position: fixed;
   left: clamp(18px, 3.4vw, 40px);
