@@ -47,9 +47,9 @@ const ACHIEVEMENTS: Achievement[] = [
 ];
 
 const BRANCH_PATHS = [
-  "M0 43 C82 43 126 2 194 2 C238 2 262 13 300 13",
-  "M0 43 C84 43 138 43 300 43",
-  "M0 43 C82 43 126 84 194 84 C238 84 262 73 300 73",
+  "M0 210 C58 210 112 210 166 210 C268 208 318 166 378 116 C452 54 548 42 748 42",
+  "M0 210 C72 210 118 210 174 210 C308 210 426 202 748 202",
+  "M0 210 C58 210 112 210 166 210 C270 214 318 254 380 304 C462 370 554 392 748 392",
 ];
 
 export default function Lore({ active = true }: { active?: boolean }) {
@@ -75,24 +75,19 @@ export default function Lore({ active = true }: { active?: boolean }) {
           </li>
           <li className={styles.achievementNode}>
             <span className={styles.origin} aria-hidden="true" />
-            <div className={styles.achievementMeta}>
-              <span className={styles.role}>Achievements</span>
-              <span className={styles.period}>Between chapters</span>
-            </div>
+            <svg
+              className={styles.branchMap}
+              viewBox="0 0 760 420"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              {BRANCH_PATHS.map((path, i) => (
+                <path key={i} className={styles.branchLine} d={path} />
+              ))}
+            </svg>
             <ul className={styles.achievements}>
-              {ACHIEVEMENTS.map((achievement, i) => (
-                <li
-                  key={achievement.title}
-                  className={styles.achievement}
-                >
-                  <svg
-                    className={styles.branch}
-                    viewBox="0 0 300 86"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path d={BRANCH_PATHS[i]} />
-                  </svg>
+              {ACHIEVEMENTS.map((achievement) => (
+                <li key={achievement.title} className={styles.achievement}>
                   <article className={styles.achievementCard}>
                     <span className={styles.achievementPeriod}>
                       {achievement.period}

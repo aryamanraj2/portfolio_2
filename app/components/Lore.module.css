@@ -103,8 +103,9 @@
 }
 
 .achievementNode {
+  --label-left: clamp(380px, 42vw, 520px);
   position: relative;
-  min-height: clamp(270px, 33vw, 370px);
+  min-height: clamp(510px, 46vw, 590px);
   opacity: 0;
   transform: translateY(12px);
   filter: blur(6px);
@@ -143,23 +144,49 @@
   transition-delay: 980ms;
 }
 
-.achievementMeta {
+.branchMap {
   position: absolute;
   top: 50%;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  max-width: clamp(122px, 14vw, 168px);
+  left: calc(-1 * clamp(24px, 3vw, 38px));
+  z-index: 0;
+  width: calc(var(--label-left) + clamp(24px, 3vw, 38px) + 28px);
+  height: 100%;
+  overflow: visible;
   transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.branchLine {
+  fill: none;
+  stroke: rgba(255, 255, 227, 0.74);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 840;
+  stroke-dashoffset: 840;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 227, 0.13));
+  transition: stroke-dashoffset 1500ms var(--ease-soft),
+    opacity 900ms var(--ease-soft);
+}
+
+.active .branchLine {
+  stroke-dashoffset: 0;
+}
+
+.active .branchLine:nth-child(1) {
+  transition-delay: 1020ms;
+}
+
+.active .branchLine:nth-child(2) {
+  transition-delay: 1120ms;
+}
+
+.active .branchLine:nth-child(3) {
+  transition-delay: 1220ms;
 }
 
 .achievements {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(12px, 1.6vw, 18px);
   min-height: inherit;
   margin: 0;
   padding: 0;
@@ -168,95 +195,58 @@
 
 .achievement {
   position: relative;
-  min-height: 86px;
-  padding-left: clamp(210px, 31vw, 350px);
+  left: var(--label-left);
+  z-index: 1;
+  width: min(360px, calc(100% - var(--label-left)));
+  min-height: 0;
 }
 
-.branch {
+.achievement:nth-child(1) {
+  position: absolute;
+  top: clamp(18px, 3vw, 34px);
+}
+
+.achievement:nth-child(2) {
   position: absolute;
   top: 50%;
-  left: calc(-1 * clamp(24px, 3vw, 38px));
-  width: calc(clamp(210px, 31vw, 350px) + clamp(24px, 3vw, 38px) + 14px);
-  height: 86px;
-  overflow: visible;
   transform: translateY(-50%);
-  pointer-events: none;
 }
 
-.branch path {
-  fill: none;
-  stroke: rgba(255, 255, 227, 0.72);
-  stroke-width: 1.35;
-  stroke-linecap: round;
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 227, 0.12));
-  transition: stroke-dashoffset 1180ms var(--ease-soft),
-    opacity 760ms var(--ease-soft);
-}
-
-.active .branch path {
-  stroke-dashoffset: 0;
-}
-
-.active .achievement:nth-child(1) .branch path {
-  transition-delay: 1040ms;
-}
-
-.active .achievement:nth-child(2) .branch path {
-  transition-delay: 1160ms;
-}
-
-.active .achievement:nth-child(3) .branch path {
-  transition-delay: 1280ms;
+.achievement:nth-child(3) {
+  position: absolute;
+  bottom: clamp(18px, 3vw, 34px);
 }
 
 .achievementCard {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 430px);
-  padding: clamp(13px, 1.4vw, 17px) clamp(14px, 1.7vw, 20px);
-  border-left: 1px solid rgba(255, 255, 227, 0.22);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 227, 0.055),
-    rgba(255, 255, 227, 0.018)
-  );
+  width: 100%;
   opacity: 0;
-  transform: translateX(-10px);
+  transform: translateX(-14px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft),
-    border-color 420ms var(--ease-soft), background 420ms var(--ease-soft);
-}
-
-.achievementCard:hover {
-  border-color: rgba(255, 255, 227, 0.48);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 227, 0.08),
-    rgba(255, 255, 227, 0.026)
-  );
+    filter 700ms var(--ease-soft);
+  filter: blur(5px);
 }
 
 .active .achievementCard {
   opacity: 1;
   transform: none;
+  filter: none;
 }
 
 .active .achievement:nth-child(1) .achievementCard {
-  transition-delay: 1280ms;
+  transition-delay: 1340ms;
 }
 
 .active .achievement:nth-child(2) .achievementCard {
-  transition-delay: 1410ms;
+  transition-delay: 1460ms;
 }
 
 .active .achievement:nth-child(3) .achievementCard {
-  transition-delay: 1540ms;
+  transition-delay: 1580ms;
 }
 
 .achievementPeriod {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   color: var(--bone);
   font-size: clamp(0.7rem, 0.84vw, 0.78rem);
   font-weight: 700;
@@ -269,9 +259,9 @@
 .achievementTitle {
   margin: 0;
   color: var(--bone);
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
-  line-height: 1.14;
-  font-variation-settings: "wght" 740;
+  font-size: clamp(1.02rem, 1.38vw, 1.24rem);
+  line-height: 1.1;
+  font-variation-settings: "wght" 760;
   letter-spacing: 0;
   opacity: 0.9;
 }
@@ -283,7 +273,7 @@
   font-weight: 500;
   line-height: 1.48;
   letter-spacing: 0;
-  opacity: 0.54;
+  opacity: 0.5;
 }
 
 .meta,
@@ -356,38 +346,26 @@
   }
 
   .achievementNode {
-    min-height: auto;
-    padding-top: 4px;
+    --label-left: clamp(58px, 19vw, 86px);
+    min-height: 470px;
+    padding-top: 0;
   }
 
   .origin {
-    top: 0.62em;
-  }
-
-  .achievementMeta {
-    position: relative;
-    top: auto;
-    left: auto;
-    max-width: none;
-    margin-bottom: 18px;
-    transform: none;
+    top: 50%;
   }
 
   .achievements {
-    gap: 14px;
-    min-height: auto;
+    min-height: inherit;
   }
 
   .achievement {
-    min-height: auto;
-    padding-left: clamp(34px, 9vw, 58px);
+    width: calc(100% - var(--label-left));
   }
 
-  .branch {
-    top: 18px;
-    left: calc(-1 * clamp(24px, 3vw, 38px));
-    width: clamp(54px, 13vw, 84px);
-    height: 26px;
+  .branchMap {
+    width: calc(100% + clamp(24px, 3vw, 38px));
+    height: 100%;
   }
 
   .achievementCard {
