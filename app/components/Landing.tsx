@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
 import Lore from "./Lore";
+import Projects from "./Projects";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -172,6 +173,7 @@ export default function Landing() {
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
         <Lore active={phase === "inflate"} />
+        <Projects active={phase === "inflate"} />
       </div>
     </div>
   );
