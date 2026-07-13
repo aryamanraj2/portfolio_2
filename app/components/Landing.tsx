@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.css";
+import AnimeScrollBar from "./AnimeScrollBar";
 import GithubCalendar from "./GithubCalendar";
 import Lore from "./Lore";
 import Projects from "./Projects";
@@ -175,6 +176,7 @@ export default function Landing() {
         <Lore active={phase === "inflate"} />
         <Projects active={phase === "inflate"} />
       </div>
+      <AnimeScrollBar targetRef={rootRef} active={phase === "inflate"} />
     </div>
   );
 }

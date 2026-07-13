@@ -6,6 +6,11 @@
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
+  scrollbar-width: none;
+}
+
+.root::-webkit-scrollbar {
+  display: none;
 }
 
 .root.enter {
