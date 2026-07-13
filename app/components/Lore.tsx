@@ -15,6 +15,12 @@ const ENTRIES: Entry[] = [
     note: "Building an internal platform for monitoring cloud infrastructure. Optimized the backend for faster dashboards and built an AI assistant that turns plain-English questions into safe database queries.",
   },
   {
+    company: "SmartoutMedia",
+    role: "Freelance iOS Developer",
+    period: "January 2026 - Present",
+    note: "Developing a native iOS app from scratch for a Canadian hunting and fishing platform. Owning the build end-to-end, from architecture through shipping it to production on the App Store.",
+  },
+  {
     company: "NSUT Exam Cell",
     role: "SDE Intern",
     period: "May 2025 - July 2025",
@@ -51,6 +57,16 @@ export default function Lore({ active = true }: { active?: boolean }) {
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[1].company}</h3>
               <p className={styles.note}>{ENTRIES[1].note}</p>
+            </article>
+          </li>
+          <li className={styles.entry}>
+            <div className={styles.meta}>
+              <span className={styles.role}>{ENTRIES[2].role}</span>
+              <span className={styles.period}>{ENTRIES[2].period}</span>
+            </div>
+            <article className={styles.body}>
+              <h3 className={styles.company}>{ENTRIES[2].company}</h3>
+              <p className={styles.note}>{ENTRIES[2].note}</p>
             </article>
           </li>
         </ol>

@@ -17,7 +17,7 @@
 }
 
 .inner {
-  width: min(100%, 1120px);
+  width: 100%;
   display: grid;
   grid-template-columns: minmax(170px, 0.32fr) minmax(0, 1fr);
   gap: clamp(24px, 5vw, 72px);
@@ -39,17 +39,6 @@
   opacity: 0.86;
 }
 
-.kicker {
-  margin: 0;
-  color: var(--bone);
-  font-size: clamp(0.78rem, 1vw, 0.92rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.38;
-}
-
 .board {
   display: flex;
   flex-direction: column;
@@ -58,7 +47,7 @@
 
 .project {
   display: grid;
-  grid-template-columns: minmax(34px, 0.12fr) minmax(0, 1fr) minmax(180px, 0.42fr) 28px;
+  grid-template-columns: minmax(34px, 0.12fr) minmax(0, 1fr) 28px;
   gap: clamp(14px, 2.4vw, 34px);
   align-items: start;
   min-height: clamp(142px, 15vw, 178px);
@@ -129,55 +118,6 @@ a.project:hover {
   opacity: 0.56;
 }
 
-.details {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(18px, 2vw, 26px);
-  padding-top: 0.16em;
-}
-
-.meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--bone);
-  font-size: clamp(0.76rem, 1vw, 0.88rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.44;
-}
-
-.dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.7;
-}
-
-.stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 0 9px;
-  color: var(--bone);
-  font-size: clamp(0.72rem, 0.9vw, 0.82rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: 1px solid rgba(255, 255, 227, 0.15);
-  opacity: 0.56;
-}
-
 .open {
   display: inline-flex;
   justify-content: flex-end;
@@ -195,16 +135,6 @@ a.project:hover .open {
 @media (max-width: 860px) {
   .project {
     grid-template-columns: 34px minmax(0, 1fr) 24px;
-  }
-
-  .details {
-    grid-column: 2 / 3;
-    gap: 14px;
-  }
-
-  .open {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
   }
 }
 
@@ -225,14 +155,6 @@ a.project:hover .open {
   .index,
   .open {
     display: none;
-  }
-
-  .details {
-    grid-column: auto;
-  }
-
-  .meta {
-    flex-wrap: wrap;
   }
 }
 
