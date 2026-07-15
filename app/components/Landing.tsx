@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Landing.module.css";
-import AnimeScrollBar from "./AnimeScrollBar";
 import GithubCalendar from "./GithubCalendar";
 import Lore from "./Lore";
 import Projects from "./Projects";
@@ -35,7 +34,6 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -135,7 +133,6 @@ export default function Landing() {
 
   return (
     <div
-      ref={rootRef}
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
       <div className={styles.screen}>
@@ -176,7 +173,6 @@ export default function Landing() {
         <Lore active={phase === "inflate"} />
         <Projects active={phase === "inflate"} />
       </div>
-      <AnimeScrollBar targetRef={rootRef} active={phase === "inflate"} />
     </div>
   );
 }
