@@ -1,4 +1,7 @@
 .projects {
+  --ease-friction: cubic-bezier(0.4, 0.02, 0.16, 1);
+  --ease-release: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 0.7, 0.4);
   width: 100%;
   margin-top: clamp(34px, 7vh, 90px);
   padding-bottom: clamp(24px, 5vh, 52px);
@@ -17,7 +20,7 @@
 }
 
 .inner {
-  width: min(100%, 1120px);
+  width: 100%;
   display: grid;
   grid-template-columns: minmax(170px, 0.32fr) minmax(0, 1fr);
   gap: clamp(24px, 5vw, 72px);
@@ -39,17 +42,6 @@
   opacity: 0.86;
 }
 
-.count {
-  margin: 0;
-  color: var(--bone);
-  font-size: clamp(0.7rem, 0.84vw, 0.78rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  opacity: 0.36;
-}
-
 .board {
   display: flex;
   flex-direction: column;
@@ -59,8 +51,8 @@
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(38px, 0.1fr) minmax(0, 1fr);
-  gap: clamp(14px, 2.4vw, 34px);
+  grid-template-columns: clamp(34px, 4vw, 48px) minmax(0, 1fr);
+  gap: clamp(12px, 1.6vw, 22px);
   align-items: start;
   width: 100%;
   margin: 0;
@@ -76,30 +68,45 @@
   transform: translateY(12px);
   filter: blur(6px);
   transition: opacity 780ms var(--ease-soft), transform 780ms var(--ease-soft),
-    filter 780ms var(--ease-soft), border-color 420ms var(--ease-soft);
+    filter 780ms var(--ease-soft);
 }
 
 .row::before {
   content: "";
   position: absolute;
-  inset: 0 -14px;
-  background: rgba(255, 255, 227, 0.035);
+  inset: 0;
+  background: rgba(255, 255, 227, 0.045);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 620ms var(--ease-soft);
+  transition: transform 260ms var(--ease-exit);
 }
 
-.row.open {
-  border-color: rgba(255, 255, 227, 0.42);
+.row::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: rgba(255, 255, 227, 0.46);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms var(--ease-exit);
 }
 
 .row.open::before {
   transform: none;
+  transition: transform 440ms var(--ease-friction);
+}
+
+.row.open::after {
+  transform: none;
+  transition: transform 460ms var(--ease-friction) 30ms;
 }
 
 .row:focus-visible {
   outline: 1px solid rgba(255, 255, 227, 0.5);
-  outline-offset: 4px;
+  outline-offset: -3px;
 }
 
 .active .row {
@@ -123,18 +130,20 @@
 .index {
   position: relative;
   z-index: 1;
-  padding-top: 0.42em;
+  justify-self: end;
+  padding-top: 0.5em;
   color: var(--bone);
   font-size: clamp(0.78rem, 1vw, 0.9rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.12em;
-  opacity: 0.3;
-  transition: opacity 420ms var(--ease-soft);
+  opacity: 0.28;
+  transition: opacity 240ms var(--ease-exit);
 }
 
 .row.open .index {
-  opacity: 0.72;
+  opacity: 0.7;
+  transition: opacity 340ms var(--ease-release) 40ms;
 }
 
 .body {
@@ -146,8 +155,12 @@
 .head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: clamp(14px, 2vw, 28px);
+  transition: opacity 260ms var(--ease-exit);
+}
+
+.board:hover .row:not(.open) .head {
+  opacity: 0.6;
+  transition: opacity 320ms var(--ease-release);
 }
 
 .name {
@@ -155,50 +168,33 @@
   color: var(--bone);
   font-size: clamp(1.7rem, 3.4vw, 2.9rem);
   line-height: 1;
-  font-variation-settings: "wght" 820;
+  font-variation-settings: "wght" 780;
   letter-spacing: -0.01em;
-  opacity: 0.72;
+  opacity: 0.74;
   transform: translateX(0);
-  transition: opacity 420ms var(--ease-soft), transform 620ms var(--ease-soft),
-    font-variation-settings 420ms var(--ease-soft);
+  transition: opacity 240ms var(--ease-exit),
+    transform 280ms var(--ease-exit),
+    font-variation-settings 240ms var(--ease-exit);
 }
 
 .row.open .name {
   opacity: 1;
   font-variation-settings: "wght" 900;
-  transform: translateX(clamp(4px, 0.6vw, 9px));
-}
-
-.platform {
-  flex: none;
-  color: var(--bone);
-  font-size: clamp(0.68rem, 0.84vw, 0.76rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  opacity: 0.3;
-  transition: opacity 420ms var(--ease-soft);
-}
-
-.row.open .platform {
-  opacity: 0.5;
+  transform: translateX(clamp(4px, 0.5vw, 8px));
+  transition: opacity 340ms var(--ease-release),
+    transform 460ms var(--ease-friction),
+    font-variation-settings 400ms var(--ease-friction);
 }
 
 .reveal {
   display: grid;
   grid-template-rows: 0fr;
-  opacity: 0;
-  transition: grid-template-rows 640ms var(--ease-soft),
-    opacity 380ms var(--ease-soft);
+  transition: grid-template-rows 300ms var(--ease-exit);
 }
 
 .row.open .reveal {
   grid-template-rows: 1fr;
-  opacity: 1;
-  transition: grid-template-rows 640ms var(--ease-soft),
-    opacity 520ms var(--ease-soft) 140ms;
+  transition: grid-template-rows 480ms var(--ease-friction);
 }
 
 .revealInner {
@@ -207,47 +203,35 @@
 }
 
 .detail {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(14px, 1.8vw, 20px);
+  display: block;
+  width: min(100%, 620px);
   padding-top: clamp(14px, 1.7vw, 20px);
+  padding-left: clamp(6px, 1vw, 14px);
 }
 
 .note {
   display: block;
-  max-width: 62ch;
   color: var(--bone);
   font-size: clamp(0.94rem, 1.18vw, 1.06rem);
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: 0;
+  opacity: 0;
+  transform: translateY(7px);
+  transition: opacity 180ms var(--ease-exit), transform 220ms var(--ease-exit);
+}
+
+.row.open .note {
   opacity: 0.56;
+  transform: none;
+  transition: opacity 380ms var(--ease-release) 90ms,
+    transform 460ms var(--ease-friction) 80ms;
 }
 
 .mark {
   color: var(--bone-lit);
   font-variation-settings: "wght" 760;
   font-weight: 500;
-}
-
-.stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  padding: 5px 11px;
-  color: var(--bone);
-  font-size: clamp(0.66rem, 0.8vw, 0.74rem);
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  border: 1px solid rgba(255, 255, 227, 0.2);
-  border-radius: 999px;
-  opacity: 0.44;
 }
 
 .more {
@@ -279,8 +263,8 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.52;
-  transition: opacity 320ms var(--ease-soft);
+  opacity: 0.48;
+  transition: opacity 320ms var(--ease-exit);
 }
 
 .moreLabel::after {
@@ -292,8 +276,8 @@
   height: 1px;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 460ms var(--ease-soft);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-exit);
 }
 
 .more:hover .moreLabel,
@@ -304,19 +288,23 @@
 .more:hover .moreLabel::after,
 .more:focus-visible .moreLabel::after {
   transform: none;
+  transform-origin: left;
+  transition: transform 460ms var(--ease-friction);
 }
 
 .moreIcon {
   display: inline-flex;
-  opacity: 0.42;
-  transform: translate(-3px, 3px);
-  transition: opacity 320ms var(--ease-soft), transform 460ms var(--ease-soft);
+  opacity: 0.4;
+  transform: translate(-4px, 4px);
+  transition: opacity 320ms var(--ease-exit), transform 380ms var(--ease-exit);
 }
 
 .more:hover .moreIcon,
 .more:focus-visible .moreIcon {
   opacity: 0.9;
   transform: none;
+  transition: opacity 320ms var(--ease-release),
+    transform 440ms var(--ease-friction) 30ms;
 }
 
 .more:focus-visible {
@@ -328,13 +316,6 @@
     grid-template-columns: 1fr;
     gap: clamp(24px, 6vw, 36px);
   }
-
-  .header {
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-  }
 }
 
 @media (max-width: 560px) {
@@ -344,34 +325,37 @@
     cursor: default;
   }
 
-  .row::before {
+  .row::before,
+  .row::after {
     display: none;
   }
 
   .index {
+    justify-self: start;
     padding-top: 0;
   }
 
-  .head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .row .name,
-  .row .index,
-  .row .platform {
-    transform: none;
+  .board:hover .row:not(.open) .head {
+    opacity: 1;
   }
 
   .row .name {
+    transform: none;
     opacity: 1;
     font-variation-settings: "wght" 900;
   }
 
   .row .reveal {
     grid-template-rows: 1fr;
-    opacity: 1;
+  }
+
+  .row .note {
+    opacity: 0.56;
+    transform: none;
+  }
+
+  .detail {
+    padding-left: 0;
   }
 }
 
@@ -386,16 +370,25 @@
   }
 
   .row::before,
-  .name,
+  .row::after,
+  .head,
   .index,
-  .platform,
   .reveal,
   .moreIcon,
+  .moreLabel,
   .moreLabel::after {
     transition: none;
   }
 
-  .row .name {
+  .row .name,
+  .row.open .name {
     transform: none;
+    transition: none;
+  }
+
+  .row .note,
+  .row.open .note {
+    transform: none;
+    transition: opacity 200ms linear;
   }
 }
