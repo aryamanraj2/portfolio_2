@@ -173,7 +173,7 @@ export default function Landing() {
         <div className={styles.footer}>
           <div className={styles.cta}>
             <a className={styles.action} href="/resume.pdf" download>
-              résumé
+              <span className={styles.actionLabel}>résumé</span>
               <span className={styles.arrow}>↓</span>
             </a>
           </div>

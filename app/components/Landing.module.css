@@ -105,6 +105,30 @@
   transform: translateX(3px);
 }
 
+.actionLabel {
+  position: relative;
+}
+
+.actionLabel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-exit);
+}
+
+.action:hover .actionLabel::after,
+.action:focus-visible .actionLabel::after {
+  transform: none;
+  transform-origin: left;
+  transition: transform 460ms var(--ease-friction);
+}
+
 .arrow {
   display: inline-block;
   transition: transform 320ms var(--ease-soft);
