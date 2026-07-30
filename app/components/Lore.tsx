@@ -1,10 +1,11 @@
+import Emphasis, { type Segment } from "./Emphasis";
 import styles from "./Lore.module.css";
 
 type Entry = {
   company: string;
   role: string;
   period: string;
-  note: string;
+  note: Segment[];
 };
 
 const ENTRIES: Entry[] = [
@@ -12,19 +13,37 @@ const ENTRIES: Entry[] = [
     company: "Bharti Airtel",
     role: "SDE Intern",
     period: "June 2026 - Present",
-    note: "Building an internal platform for monitoring cloud infrastructure. Optimized the backend for faster dashboards and built an AI assistant that turns plain-English questions into safe database queries.",
+    note: [
+      "Re-architected an internal platform tracking live and historical state across a distributed VM fleet, cutting dashboard query latency by ",
+      { kw: "30%" },
+      ". Built a guardrailed natural-language layer over it: local LLMs, a read-only ",
+      { kw: "text-to-SQL" },
+      " agent, and anomaly summaries for provisioning spikes.",
+    ],
   },
   {
     company: "SmartoutMedia",
     role: "Freelance iOS Developer",
     period: "January 2026 - Present",
-    note: "Developing a native iOS app from scratch for a Canadian hunting and fishing platform. Owning the build end-to-end, from architecture through shipping it to production on the App Store.",
+    note: [
+      "Built the SmartOut iOS app from scratch in Swift and SwiftUI, now past ",
+      { kw: "50K installs" },
+      ". It works fully offline across ",
+      { kw: "Canada" },
+      ", mapping hunting and fishing regulations onto 456 regulatory zones over a bundled SQLite store.",
+    ],
   },
   {
     company: "NSUT Exam Cell",
     role: "SDE Intern",
     period: "May 2025 - July 2025",
-    note: "Built a platform that automated exam scheduling for over 10,000 students, cutting manual paperwork by 70%. Also made a mobile app for staff to manage exam duties and attendance in real time.",
+    note: [
+      "Built a platform that automated exam scheduling for ",
+      { kw: "10,000+ students" },
+      ", cutting manual paperwork by 70%. Shipped ",
+      { kw: "NSUTrack" },
+      " alongside it, native Android and iOS clients centralizing schedules, attendance, and society notices for 1,500+ students over an offline-first cache.",
+    ],
   },
 ];
 
@@ -46,7 +65,9 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[0].company}</h3>
-              <p className={styles.note}>{ENTRIES[0].note}</p>
+              <p className={styles.note}>
+                <Emphasis parts={ENTRIES[0].note} />
+              </p>
             </article>
           </li>
           <li className={styles.entry}>
@@ -56,7 +77,9 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[1].company}</h3>
-              <p className={styles.note}>{ENTRIES[1].note}</p>
+              <p className={styles.note}>
+                <Emphasis parts={ENTRIES[1].note} />
+              </p>
             </article>
           </li>
           <li className={styles.entry}>
@@ -66,7 +89,9 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[2].company}</h3>
-              <p className={styles.note}>{ENTRIES[2].note}</p>
+              <p className={styles.note}>
+                <Emphasis parts={ENTRIES[2].note} />
+              </p>
             </article>
           </li>
         </ol>

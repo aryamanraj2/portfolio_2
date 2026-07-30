@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
+import Emphasis, { type Segment } from "./Emphasis";
 import Lore from "./Lore";
 import Projects from "./Projects";
 
@@ -11,9 +12,17 @@ const GITHUB_USER = "aryamanraj2";
 const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
 const TAGLINE = "Building for iOS and Android.";
-const BIO = [
-  "I'm Aryaman — an undergrad and freelancer, building things.",
-  "I write native apps for iOS and Android, the AI pipelines that run inside them, and the backends behind them.",
+const BIO: Segment[][] = [
+  ["I'm Aryaman — an undergrad and freelancer, building things."],
+  [
+    "I write ",
+    { kw: "native" },
+    " apps for iOS and Android, the ",
+    { kw: "AI pipelines" },
+    " that run inside them, and the ",
+    { kw: "backends" },
+    " behind them.",
+  ],
 ];
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
@@ -155,7 +164,7 @@ export default function Landing() {
             <div className={styles.bio}>
               {BIO.map((line, i) => (
                 <p key={i} className={styles.description}>
-                  {line}
+                  <Emphasis parts={line} />
                 </p>
               ))}
             </div>

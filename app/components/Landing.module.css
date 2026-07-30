@@ -116,12 +116,20 @@
 
 .tagline,
 .description {
-  color: var(--bone);
   opacity: 0;
   transform: translateY(14px);
   filter: blur(7px);
   transition: opacity 820ms var(--ease-soft), transform 820ms var(--ease-soft),
     filter 820ms var(--ease-soft);
+}
+
+.tagline {
+  color: var(--bone);
+}
+
+.description {
+  --kw-rest: color-mix(in srgb, var(--bone) 78%, transparent);
+  color: var(--kw-rest);
 }
 
 .tagline {
@@ -209,7 +217,7 @@
 }
 
 .inflate .bio .description {
-  opacity: 0.78;
+  opacity: 1;
 }
 
 .inflate .tagline {
@@ -222,6 +230,11 @@
 
 .inflate .bio .description:nth-child(2) {
   transition-delay: 320ms;
+  --kw-delay: 1040ms;
+}
+
+.inflate .description {
+  --kw-play: running;
 }
 
 .inflate .cta {

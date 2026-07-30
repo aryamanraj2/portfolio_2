@@ -1,6 +1,7 @@
 :root {
   --ink: #10100e;
   --bone: #ffffe3;
+  --bone-lit: #fff3a8;
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -28,4 +29,103 @@ body {
 ::selection {
   background: var(--bone);
   color: var(--ink);
+}
+
+.kwRun {
+  display: contents;
+}
+
+.kw,
+.kwHold {
+  white-space: nowrap;
+}
+
+.kwWord,
+.kwChar {
+  display: inline-block;
+  transform: translateX(var(--dx, 0px));
+  animation-timing-function: var(--ease-soft);
+  animation-fill-mode: forwards;
+  animation-play-state: var(--kw-play, paused);
+}
+
+.kwWord {
+  animation-name: kwGlide;
+  animation-duration: 640ms;
+  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms);
+}
+
+.kwChar {
+  white-space: pre;
+  color: var(--kw-rest, var(--bone));
+  font-variation-settings: "wght" 500;
+  animation-name: kwGlide, kwBold, kwGlow;
+  animation-duration: 640ms, 640ms, 560ms;
+  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms),
+    calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms),
+    calc(var(--kw-delay, 0ms) + var(--i, 0) * 22ms);
+}
+
+.kwChar::before {
+  content: attr(data-c);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  white-space: pre;
+  font-variation-settings: "wght" 820;
+}
+
+@keyframes kwBold {
+  from {
+    font-variation-settings: "wght" 500;
+  }
+  to {
+    font-variation-settings: "wght" 820;
+  }
+}
+
+@keyframes kwGlow {
+  from {
+    color: var(--kw-rest, var(--bone));
+  }
+  to {
+    color: var(--bone-lit);
+  }
+}
+
+@keyframes kwGlide {
+  from {
+    transform: translateX(var(--dx, 0px));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.kwRest .kwChar::before {
+  content: none;
+}
+
+.kwRest .kwChar,
+.kwRest .kwWord {
+  animation: none !important;
+  transform: none !important;
+}
+
+.kwRest .kwChar {
+  font-variation-settings: "wght" 500 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kwWord,
+  .kwChar {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .kwChar {
+    color: var(--bone-lit);
+    font-variation-settings: "wght" 820;
+  }
 }
