@@ -204,7 +204,8 @@
 
 .detail {
   display: block;
-  width: min(100%, 620px);
+  width: 100%;
+  min-height: clamp(86px, 7.5vw, 112px);
   padding-top: clamp(14px, 1.7vw, 20px);
   padding-left: clamp(6px, 1vw, 14px);
 }
@@ -355,6 +356,7 @@
   }
 
   .detail {
+    min-height: 0;
     padding-left: 0;
   }
 }

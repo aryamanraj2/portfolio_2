@@ -17,7 +17,7 @@ const PROJECTS: Project[] = [
     note: [
       "Turns a group chat into ",
       { b: "a decided night out" },
-      " — one Siri shortcut in, a locked multi-stop itinerary out. Friends join by code and swipe to vote until the plan commits.",
+      ". A seven-stage pipeline pulls intent from a Siri summary, researches live venues, and resolves conflicts down a constraint ladder that relaxes budget before it ever touches dietary or accessibility. The model only ranks; deterministic code alone mints the plan, and the chat itself is never stored.",
     ],
   },
   {
@@ -25,7 +25,7 @@ const PROJECTS: Project[] = [
     note: [
       "A student budgeting app that ",
       { b: "reacts to your balance" },
-      " — the interface shifts colour as it moves. Receipts scan themselves, and every insight is computed on-device.",
+      " — a theming engine maps what is left to a palette and repaints the whole interface as the number moves. Receipts are read straight off the camera, goal images are cut from their background on device, and every insight is computed against a store that never leaves the phone.",
     ],
   },
   {
@@ -33,7 +33,7 @@ const PROJECTS: Project[] = [
     note: [
       "Aquarium care where ",
       { b: "the classifier owns the verdict" },
-      " and the model only explains it. Routable agents read live water telemetry, diagnose fish from a photo, and cart the fix.",
+      " and the model only explains it — water readings are scored first, so the language layer can phrase a result but never invent one. Three routable specialists split the work: live telemetry, image diagnosis from a photo of the fish, and a remediation cart assembled from whatever just got flagged.",
     ],
   },
 ];
