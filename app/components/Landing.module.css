@@ -96,17 +96,16 @@
   font-size: clamp(0.98rem, 1.5vw, 1.24rem);
   font-weight: 500;
   letter-spacing: -0.01em;
-  opacity: 0.6;
-  transition: opacity 320ms var(--ease-soft), transform 320ms var(--ease-soft);
 }
 
-.action:hover {
-  opacity: 1;
-  transform: translateX(3px);
+.action:focus-visible {
+  outline: none;
 }
 
 .actionLabel {
   position: relative;
+  opacity: 0.6;
+  transition: opacity 320ms var(--ease-exit);
 }
 
 .actionLabel::after {
@@ -114,12 +113,17 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -3px;
+  bottom: -5px;
   height: 1px;
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 300ms var(--ease-exit);
+}
+
+.action:hover .actionLabel,
+.action:focus-visible .actionLabel {
+  opacity: 1;
 }
 
 .action:hover .actionLabel::after,
@@ -130,12 +134,18 @@
 }
 
 .arrow {
-  display: inline-block;
-  transition: transform 320ms var(--ease-soft);
+  display: inline-flex;
+  opacity: 0.4;
+  transform: translate(-4px, 4px);
+  transition: opacity 320ms var(--ease-exit), transform 380ms var(--ease-exit);
 }
 
-.action:hover .arrow {
-  transform: translateX(3px);
+.action:hover .arrow,
+.action:focus-visible .arrow {
+  opacity: 0.9;
+  transform: none;
+  transition: opacity 320ms var(--ease-release),
+    transform 440ms var(--ease-friction) 30ms;
 }
 
 .tagline,

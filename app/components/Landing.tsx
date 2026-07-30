@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
 import Emphasis, { type Segment } from "./Emphasis";
@@ -174,7 +175,9 @@ export default function Landing() {
           <div className={styles.cta}>
             <a className={styles.action} href="/resume.pdf" download>
               <span className={styles.actionLabel}>résumé</span>
-              <span className={styles.arrow}>↓</span>
+              <span className={styles.arrow}>
+                <ArrowUpRight size={17} strokeWidth={1.8} />
+              </span>
             </a>
           </div>
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />

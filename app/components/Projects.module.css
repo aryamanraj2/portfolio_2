@@ -1,7 +1,4 @@
 .projects {
-  --ease-friction: cubic-bezier(0.4, 0.02, 0.16, 1);
-  --ease-release: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-exit: cubic-bezier(0.4, 0, 0.7, 0.4);
   width: 100%;
   margin-top: clamp(34px, 7vh, 90px);
   padding-bottom: clamp(24px, 5vh, 52px);
