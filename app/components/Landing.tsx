@@ -7,6 +7,7 @@ import GithubCalendar from "./GithubCalendar";
 import Emphasis, { type Segment } from "./Emphasis";
 import Lore from "./Lore";
 import Projects from "./Projects";
+import SideQuests from "./SideQuests";
 import Stamp from "./Stamp";
 import Wash, { type TintKey, type WashHandle } from "./Wash";
 
@@ -193,6 +194,7 @@ export default function Landing() {
         </div>
         <Lore active={phase === "inflate"} />
         <Projects active={phase === "inflate"} onTint={tint} />
+        <SideQuests active={phase === "inflate"} />
       </div>
     </div>
   );
