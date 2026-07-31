@@ -1,6 +1,6 @@
 .root {
-  --cell: clamp(9px, 1vw, 13px);
-  --cell-gap: clamp(2px, 0.3vw, 4px);
+  --cell: clamp(10px, 1.1vw, 14px);
+  --cell-gap: clamp(2px, 0.33vw, 4.5px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;

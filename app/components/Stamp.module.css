@@ -3,37 +3,25 @@
   --stamp-ink: var(--ink);
 
   position: absolute;
-  top: clamp(16px, 3vw, 40px);
-  right: clamp(20px, 4vw, 56px);
+  top: clamp(10px, 2.2vw, 34px);
+  right: clamp(14px, 2.8vw, 46px);
   z-index: 3;
-  width: clamp(120px, 17vw, 244px);
+  width: clamp(148px, 15vw, 310px);
   height: auto;
+  overflow: visible;
   pointer-events: none;
   opacity: 0;
-  transform: rotate(2deg) scale(1.24);
-  transition: opacity 520ms var(--ease-exit), transform 620ms var(--ease-friction);
-}
-
-.visible {
-  opacity: 1;
-  transform: rotate(-9deg) scale(1);
-  transition-delay: 640ms;
+  will-change: transform, opacity, filter;
 }
 
 @media (max-width: 720px) {
   .stamp {
-    width: clamp(64px, 18vw, 92px);
+    width: clamp(108px, 15vw, 160px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .stamp {
-    transition: opacity 200ms linear;
-    transform: rotate(-9deg);
-  }
-
-  .visible {
-    transform: rotate(-9deg);
-    transition-delay: 0ms;
+    will-change: auto;
   }
 }
