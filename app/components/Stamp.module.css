@@ -1,12 +1,12 @@
 .stamp {
-  --stamp-badge: var(--bone);
+  --stamp-badge: var(--neon);
   --stamp-ink: var(--ink);
 
   position: absolute;
-  top: clamp(20px, 4vw, 56px);
+  top: clamp(16px, 3vw, 40px);
   right: clamp(20px, 4vw, 56px);
   z-index: 3;
-  width: clamp(84px, 11vw, 148px);
+  width: clamp(120px, 17vw, 244px);
   height: auto;
   pointer-events: none;
   opacity: 0;
