@@ -54,21 +54,8 @@
   line-height: 0.95;
   font-variation-settings: "wght" 900;
   letter-spacing: 0;
-  opacity: 0;
-  transition: opacity 620ms var(--ease-soft), color 760ms var(--ease-soft),
-    font-variation-settings 900ms var(--ease-soft),
-    letter-spacing 900ms var(--ease-soft);
-  will-change: font-variation-settings;
-}
-
-.live .title {
   opacity: 0.86;
-}
-
-.morphing .title {
-  opacity: 0.66;
-  font-variation-settings: "wght" 600;
-  letter-spacing: 0.016em;
+  transition: color 760ms var(--ease-soft);
 }
 
 .text {
@@ -94,8 +81,8 @@
 
 .tab {
   display: inline-flex;
-  align-items: center;
-  gap: 0.72em;
+  align-items: baseline;
+  gap: 0.66em;
   margin: 0;
   padding: 3px 0;
   color: var(--soft);
@@ -128,59 +115,74 @@
 }
 
 .mark {
-  display: inline-flex;
-  align-items: center;
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 1.02em;
+  height: 0.73em;
 }
 
-.bracket {
-  display: inline-block;
-  font-weight: 500;
-  opacity: 0.72;
+.mark::before,
+.mark::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.2em;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.68;
   transform: translateX(0);
   transition: transform 320ms var(--ease-exit), opacity 320ms var(--ease-exit);
 }
 
-.tab.on .bracket {
+.mark::before {
+  left: 0;
+  border-left: 1px solid currentColor;
+}
+
+.mark::after {
+  right: 0;
+  border-right: 1px solid currentColor;
+}
+
+.tab.on .mark::before,
+.tab.on .mark::after {
   opacity: 1;
   transition: transform 520ms var(--ease-friction),
     opacity 300ms var(--ease-release);
 }
 
-.tab.on .bracket:first-child {
-  transform: translateX(-0.07em);
+.tab.on .mark::before {
+  transform: translateX(-0.08em);
 }
 
-.tab.on .bracket:last-child {
-  transform: translateX(0.07em);
-}
-
-.slot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 0.62em;
-  height: 0.62em;
+.tab.on .mark::after {
+  transform: translateX(0.08em);
 }
 
 .pip {
-  width: 0.44em;
-  height: 0.44em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.38em;
+  height: 0.38em;
   border-radius: 50%;
   background: currentColor;
   opacity: 0;
-  transform: scale(0.2);
+  transform: translate(-50%, -50%) scale(0.2);
   transition: transform 300ms var(--ease-exit), opacity 300ms var(--ease-exit);
 }
 
 .tab:hover .pip,
 .tab:focus-visible .pip {
   opacity: 0.5;
-  transform: scale(0.56);
+  transform: translate(-50%, -50%) scale(0.56);
 }
 
 .tab.on .pip {
   opacity: 1;
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
   transition: transform 560ms var(--ease-friction),
     opacity 300ms var(--ease-release);
 }
@@ -395,8 +397,8 @@
 
 .status {
   display: inline-flex;
-  align-items: center;
-  gap: 0.7em;
+  align-items: baseline;
+  gap: 0.62em;
   align-self: flex-start;
   color: var(--soft);
   font-size: clamp(0.7rem, 0.86vw, 0.79rem);
@@ -419,10 +421,10 @@
 }
 
 .caret {
-  width: 0.46em;
-  height: 1.05em;
+  flex: 0 0 auto;
+  width: 0.44em;
+  height: 0.78em;
   background: currentColor;
-  transform: translateY(0.04em);
 }
 
 .panel.on .caret {
@@ -485,27 +487,26 @@
     transition-delay: 0ms;
   }
 
-  .title,
-  .morphing .title {
-    opacity: 0.86;
-    font-variation-settings: "wght" 900;
-    letter-spacing: 0;
+  .title {
     transition: none;
   }
 
-  .bracket,
-  .pip,
+  .mark::before,
+  .mark::after,
+  .tab.on .mark::before,
+  .tab.on .mark::after,
   .label,
-  .tab.on .bracket,
-  .tab.on .pip,
   .tab.on .label {
     transition: none;
     transform: none;
   }
 
+  .pip,
+  .tab:hover .pip,
+  .tab:focus-visible .pip,
   .tab.on .pip {
-    opacity: 1;
-    transform: scale(1);
+    transition: none;
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .panel.on .bar {

@@ -53,34 +53,17 @@ const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 
 export default function SideQuests({ active = true }: { active?: boolean }) {
   const [index, setIndex] = useState(0);
-  const [live, setLive] = useState(false);
-  const [morphing, setMorphing] = useState(false);
   const [cells, setCells] = useState<Cell[]>(() => settled(QUESTS[0].title));
-  const root = useRef<HTMLElement>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const shown = useRef("");
+  const shown = useRef(QUESTS[0].title);
+  const first = useRef(true);
   const raf = useRef(0);
 
   useEffect(() => {
-    if (!active || live) return;
-    const node = root.current;
-    if (!node) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        io.disconnect();
-        setLive(true);
-      },
-      { rootMargin: "-14% 0px -14% 0px" },
-    );
-
-    io.observe(node);
-    return () => io.disconnect();
-  }, [active, live]);
-
-  useEffect(() => {
-    if (!live) return;
+    if (first.current) {
+      first.current = false;
+      return;
+    }
 
     const target = QUESTS[index].title;
     const source = shown.current;
@@ -90,8 +73,6 @@ export default function SideQuests({ active = true }: { active?: boolean }) {
       setCells(settled(target));
       return;
     }
-
-    setMorphing(true);
 
     const length = Math.max(source.length, target.length);
     const specs = Array.from({ length }, (_, i) => {
@@ -131,12 +112,11 @@ export default function SideQuests({ active = true }: { active?: boolean }) {
 
       shown.current = target;
       setCells(settled(target));
-      setMorphing(false);
     };
 
     raf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf.current);
-  }, [live, index]);
+  }, [index]);
 
   const steer = (event: KeyboardEvent<HTMLDivElement>) => {
     const step =
@@ -152,19 +132,14 @@ export default function SideQuests({ active = true }: { active?: boolean }) {
     tabs.current[next]?.focus();
   };
 
-  const quest = QUESTS[index];
-
   return (
     <section
-      ref={root}
-      className={`${styles.quests} ${active ? styles.active : ""} ${
-        live ? styles.live : ""
-      } ${morphing ? styles.morphing : ""}`}
+      className={`${styles.quests} ${active ? styles.active : ""}`}
       aria-label="Side quests"
     >
       <div className={styles.inner}>
         <header className={styles.header}>
-          <h2 className={styles.title} aria-label={quest.title}>
+          <h2 className={styles.title} aria-label={QUESTS[index].title}>
             <span className={styles.text} aria-hidden="true">
               {cells.map((cell, i) => (
                 <span
@@ -199,11 +174,7 @@ export default function SideQuests({ active = true }: { active?: boolean }) {
                 onClick={() => setIndex(i)}
               >
                 <span className={styles.mark} aria-hidden="true">
-                  <span className={styles.bracket}>[</span>
-                  <span className={styles.slot}>
-                    <span className={styles.pip} />
-                  </span>
-                  <span className={styles.bracket}>]</span>
+                  <span className={styles.pip} />
                 </span>
                 <span className={styles.label}>{item.tab}</span>
               </button>
