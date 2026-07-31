@@ -1,10 +1,19 @@
 "use client";
 
-import { Fragment, useEffect, useRef, type CSSProperties } from "react";
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 export type Segment = string | { kw: string };
 
 const GAP = 2;
+const LIT_IN = 200;
+const LIT_OUT = 420;
+const REMEASURE = 160;
 
 type Token =
   | { kind: "word"; text: string; base: number }
@@ -42,26 +51,38 @@ const build = (parts: Segment[]): Node[] => {
   return nodes;
 };
 
-export default function Emphasis({ parts }: { parts: Segment[] }) {
+export default function Emphasis({
+  parts,
+  play,
+}: {
+  parts: Segment[];
+  play?: boolean;
+}) {
   const root = useRef<HTMLSpanElement>(null);
+  const [lit, setLit] = useState(false);
   const nodes = build(parts);
 
   useEffect(() => {
     const node = root.current;
     if (!node) return;
 
+    let alive = true;
+
     const flip = () => {
+      if (!alive) return;
       const items = [...node.querySelectorAll<HTMLElement>(".kwChar, .kwWord")];
       for (const el of items) el.style.removeProperty("--dx");
 
+      node.classList.add("kwStill");
       node.classList.add("kwRest");
       const rest = items.map((el) => el.getBoundingClientRect());
       node.classList.remove("kwRest");
+      const bold = items.map((el) => el.getBoundingClientRect());
+      node.classList.remove("kwStill");
 
       items.forEach((el, k) => {
-        const now = el.getBoundingClientRect();
-        const sameLine = Math.abs(rest[k].top - now.top) < 1;
-        const dx = sameLine ? rest[k].left - now.left : 0;
+        const sameLine = Math.abs(rest[k].top - bold[k].top) < 1;
+        const dx = sameLine ? rest[k].left - bold[k].left : 0;
         if (Math.abs(dx) > 0.05) {
           el.style.setProperty("--dx", `${dx.toFixed(2)}px`);
         }
@@ -70,7 +91,26 @@ export default function Emphasis({ parts }: { parts: Segment[] }) {
 
     flip();
     document.fonts?.ready.then(flip);
+
+    let pending: ReturnType<typeof setTimeout>;
+    const resize = () => {
+      clearTimeout(pending);
+      pending = setTimeout(flip, REMEASURE);
+    };
+
+    window.addEventListener("resize", resize);
+    return () => {
+      alive = false;
+      window.removeEventListener("resize", resize);
+      clearTimeout(pending);
+    };
   }, []);
+
+  useEffect(() => {
+    if (play === undefined) return;
+    const id = setTimeout(() => setLit(play), play ? LIT_IN : LIT_OUT);
+    return () => clearTimeout(id);
+  }, [play]);
 
   const token = (item: Token, key: number) =>
     item.kind === "word" ? (
@@ -97,7 +137,10 @@ export default function Emphasis({ parts }: { parts: Segment[] }) {
     );
 
   return (
-    <span ref={root} className="kwRun">
+    <span
+      ref={root}
+      className={play === undefined || lit ? "kwRun" : "kwRun kwIdle"}
+    >
       {nodes.map((node, idx) => {
         if (node.kind === "space") {
           return <Fragment key={idx}>{node.text}</Fragment>;

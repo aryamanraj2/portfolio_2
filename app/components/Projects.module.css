@@ -208,8 +208,11 @@
 }
 
 .note {
+  --kw-rest: color-mix(in srgb, var(--bone) 56%, transparent);
+  --kw-step: 12ms;
+  --kw-play: running;
   display: block;
-  color: var(--bone);
+  color: var(--kw-rest);
   font-size: clamp(0.94rem, 1.18vw, 1.06rem);
   font-weight: 500;
   line-height: 1.55;
@@ -220,16 +223,10 @@
 }
 
 .row.open .note {
-  opacity: 0.56;
+  opacity: 1;
   transform: none;
   transition: opacity 380ms var(--ease-release) 90ms,
     transform 460ms var(--ease-friction) 80ms;
-}
-
-.mark {
-  color: var(--bone);
-  font-variation-settings: "wght" 760;
-  font-weight: 500;
 }
 
 .stack {
@@ -465,7 +462,7 @@
   }
 
   .row .note {
-    opacity: 0.56;
+    opacity: 1;
     transform: none;
   }
 
@@ -481,6 +478,17 @@
   .detail {
     min-height: 0;
     padding-left: 0;
+  }
+
+  .note :global(.kwChar),
+  .note :global(.kwWord) {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .note :global(.kwChar) {
+    color: var(--bone) !important;
+    font-variation-settings: "wght" 820 !important;
   }
 }
 

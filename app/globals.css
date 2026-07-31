@@ -59,7 +59,7 @@ body {
 .kwWord {
   animation-name: kwGlide;
   animation-duration: 640ms;
-  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms);
+  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * var(--kw-step, 22ms));
 }
 
 .kwChar {
@@ -68,9 +68,9 @@ body {
   font-variation-settings: "wght" 500;
   animation-name: kwGlide, kwBold, kwGlow;
   animation-duration: 640ms, 640ms, 560ms;
-  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms),
-    calc(var(--kw-delay, 0ms) + var(--b, 0) * 22ms),
-    calc(var(--kw-delay, 0ms) + var(--i, 0) * 22ms);
+  animation-delay: calc(var(--kw-delay, 0ms) + var(--b, 0) * var(--kw-step, 22ms)),
+    calc(var(--kw-delay, 0ms) + var(--b, 0) * var(--kw-step, 22ms)),
+    calc(var(--kw-delay, 0ms) + var(--i, 0) * var(--kw-step, 22ms));
 }
 
 .kwChar::before {
@@ -122,6 +122,16 @@ body {
 
 .kwRest .kwChar {
   font-variation-settings: "wght" 500 !important;
+}
+
+.kwStill .kwChar,
+.kwStill .kwWord {
+  transform: none !important;
+}
+
+.kwIdle .kwChar,
+.kwIdle .kwWord {
+  animation-name: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

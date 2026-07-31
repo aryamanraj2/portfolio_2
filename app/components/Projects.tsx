@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight } from "lucide-react";
 import styles from "./Projects.module.css";
-
-type Part = string | { b: string };
+import Emphasis, { type Segment } from "./Emphasis";
 
 type Project = {
   title: string;
   tech: string[];
-  note: Part[];
+  note: Segment[];
 };
 
 const PROJECTS: Project[] = [
@@ -25,7 +24,7 @@ const PROJECTS: Project[] = [
     ],
     note: [
       "Turns a group chat into ",
-      { b: "a decided night out" },
+      { kw: "a decided night out" },
       ". A seven-stage pipeline pulls intent from a Siri summary, researches live venues, and resolves conflicts down a constraint ladder that relaxes budget before it ever touches dietary or accessibility. The model only ranks; deterministic code alone mints the plan, and the chat itself is never stored.",
     ],
   },
@@ -40,8 +39,10 @@ const PROJECTS: Project[] = [
     ],
     note: [
       "A student budgeting app that ",
-      { b: "reacts to your balance" },
-      " — a theming engine maps what is left to a palette and repaints the whole interface as the number moves. Receipts are read straight off the camera, goal images are cut from their background on device, and every insight is computed against a store that never leaves the phone.",
+      { kw: "reacts to your balance" },
+      " — a theming engine maps what is left to a palette and repaints the whole interface as the number moves. Receipts are read straight off the camera, goal images are cut from their background on device, and every insight is computed against a store that never leaves the phone. It won Apple's ",
+      { kw: "Swift Student Challenge 2026" },
+      ".",
     ],
   },
   {
@@ -57,25 +58,18 @@ const PROJECTS: Project[] = [
     ],
     note: [
       "Aquarium care where ",
-      { b: "the classifier owns the verdict" },
-      " and the model only explains it — water readings are scored first, so the language layer can phrase a result but never invent one. Three routable specialists split the work: live telemetry, image diagnosis from a photo of the fish, and a remediation cart assembled from whatever just got flagged.",
+      { kw: "the classifier owns the verdict" },
+      " and the model only explains it — water readings are scored first, so the language layer can phrase a result but never invent one. Three routable specialists split the work: live telemetry, image diagnosis from a photo of the fish, and a remediation cart assembled from whatever just got flagged. It took ",
+      { kw: "Best Overall Project" },
+      " and ",
+      { kw: "Best Use of Gemini" },
+      " at an MLH hackathon, with a runner-up finish for UI/UX.",
     ],
   },
 ];
 
 const MARQUEE_COPIES = [0, 1, 2, 3];
 const SECONDS_PER_ITEM = 5.3;
-
-const renderNote = (parts: Part[]) =>
-  parts.map((part, i) =>
-    typeof part === "string" ? (
-      part
-    ) : (
-      <b key={i} className={styles.mark}>
-        {part.b}
-      </b>
-    )
-  );
 
 const SPIN_MS = 4000;
 const SPIN_WHIP = 280;
@@ -206,7 +200,10 @@ export default function Projects({ active = true }: { active?: boolean }) {
                   <span className={styles.revealInner}>
                     <span className={styles.detail}>
                       <span className={styles.note}>
-                        {renderNote(project.note)}
+                        <Emphasis
+                          parts={project.note}
+                          play={index === open}
+                        />
                       </span>
                       <TechStrip tech={project.tech} open={index === open} />
                     </span>
