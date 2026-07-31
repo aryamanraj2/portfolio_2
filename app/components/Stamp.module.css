@@ -14,6 +14,10 @@
   will-change: transform, opacity, filter;
 }
 
+.badge {
+  pointer-events: visiblePainted;
+}
+
 @media (max-width: 720px) {
   .stamp {
     width: clamp(108px, 15vw, 160px);
@@ -23,5 +27,9 @@
 @media (prefers-reduced-motion: reduce) {
   .stamp {
     will-change: auto;
+  }
+
+  .badge {
+    pointer-events: none;
   }
 }
