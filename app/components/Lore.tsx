@@ -45,6 +45,12 @@ const ENTRIES: Entry[] = [
       " alongside it, native Android and iOS clients centralizing schedules, attendance, and society notices for 1,500+ students over an offline-first cache.",
     ],
   },
+  {
+    company: "NSUT, Delhi",
+    role: "Bachelors",
+    period: "Aug 2024 - Present",
+    note: ["surviving Electronics and communications"],
+  },
 ];
 
 export default function Lore({ active = true }: { active?: boolean }) {
@@ -91,6 +97,18 @@ export default function Lore({ active = true }: { active?: boolean }) {
               <h3 className={styles.company}>{ENTRIES[2].company}</h3>
               <p className={styles.note}>
                 <Emphasis parts={ENTRIES[2].note} />
+              </p>
+            </article>
+          </li>
+          <li className={styles.entry}>
+            <div className={styles.meta}>
+              <span className={styles.role}>{ENTRIES[3].role}</span>
+              <span className={styles.period}>{ENTRIES[3].period}</span>
+            </div>
+            <article className={styles.body}>
+              <h3 className={styles.company}>{ENTRIES[3].company}</h3>
+              <p className={styles.note}>
+                <Emphasis parts={ENTRIES[3].note} />
               </p>
             </article>
           </li>
