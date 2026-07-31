@@ -13,9 +13,9 @@ const GITHUB_USER = "aryamanraj2";
 
 const SOURCE = ">Works";
 const TARGET = "Aryaman Jaiswal";
-const TAGLINE = "Building for iOS and Android.";
+const TAGLINE = "Undergrad, building for iOS and Android.";
 const BIO: Segment[][] = [
-  ["I'm Aryaman — an undergrad and freelancer, building things."],
+  ["I'm Aryaman — an undergrad @NSUT and freelancer, building things."],
   [
     "I write ",
     { kw: "native" },

@@ -155,7 +155,7 @@
   transition: opacity 260ms var(--ease-exit);
 }
 
-.board:hover .row:not(.open) .head {
+.board.focused .row:not(.open) .head {
   opacity: 0.6;
   transition: opacity 320ms var(--ease-release);
 }
@@ -230,6 +230,123 @@
   color: var(--bone);
   font-variation-settings: "wght" 760;
   font-weight: 500;
+}
+
+.stack {
+  position: relative;
+  display: block;
+  margin-top: clamp(16px, 1.9vw, 23px);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 180ms var(--ease-exit), transform 220ms var(--ease-exit);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 4%,
+    #000 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 4%,
+    #000 90%,
+    transparent 100%
+  );
+}
+
+.row.open .stack {
+  opacity: 1;
+  transform: none;
+  transition: opacity 380ms var(--ease-release) 170ms,
+    transform 460ms var(--ease-friction) 160ms;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  animation: techScroll var(--dur, 24s) linear infinite;
+  animation-play-state: paused;
+}
+
+.row.open .track {
+  animation-play-state: running;
+  will-change: transform;
+}
+
+.stack:hover .track {
+  animation-play-state: paused;
+}
+
+.stack.spinning .track {
+  animation: none;
+}
+
+.row.open .stack.spinning .track {
+  will-change: transform, filter;
+}
+
+.row.open .stack.spinning {
+  transition: opacity 240ms var(--ease-release),
+    transform 320ms var(--ease-friction);
+}
+
+.seq {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: clamp(11px, 1.25vw, 17px);
+  padding-right: clamp(11px, 1.25vw, 17px);
+  color: var(--bone);
+  font-size: clamp(0.75rem, 0.92vw, 0.86rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.44;
+  transition: opacity 300ms var(--ease-exit);
+}
+
+.stack:hover .chip {
+  opacity: 0.74;
+  transition: opacity 340ms var(--ease-release);
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@keyframes techScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-25%, 0, 0);
+  }
 }
 
 .more {
@@ -333,7 +450,7 @@
     padding-top: 0;
   }
 
-  .board:hover .row:not(.open) .head {
+  .board.focused .row:not(.open) .head {
     opacity: 1;
   }
 
@@ -350,6 +467,15 @@
   .row .note {
     opacity: 0.56;
     transform: none;
+  }
+
+  .row .stack {
+    opacity: 1;
+    transform: none;
+  }
+
+  .row .track {
+    animation-play-state: running;
   }
 
   .detail {
@@ -389,5 +515,35 @@
   .row.open .note {
     transform: none;
     transition: opacity 200ms linear;
+  }
+
+  .row .stack,
+  .row.open .stack {
+    transform: none;
+    transition: opacity 200ms linear;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .track,
+  .row.open .track {
+    width: 100%;
+    flex-wrap: wrap;
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .seq {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .seq ~ .seq {
+    display: none;
+  }
+
+  .chip {
+    transition: none;
   }
 }
