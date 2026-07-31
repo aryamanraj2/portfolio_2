@@ -7,6 +7,7 @@ import GithubCalendar from "./GithubCalendar";
 import Emphasis, { type Segment } from "./Emphasis";
 import Lore from "./Lore";
 import Projects from "./Projects";
+import Stamp from "./Stamp";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -145,6 +146,7 @@ export default function Landing() {
     <div
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
+      <Stamp active={phase === "inflate"} />
       <div className={styles.screen}>
         <div className={styles.hero}>
           <h1 className={styles.line} aria-label={TARGET}>

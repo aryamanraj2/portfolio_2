@@ -1,7 +1,6 @@
 :root {
-  --ink: #10100e;
-  --bone: #ffffe3;
-  --bone-lit: #fff3a8;
+  --ink: #000000;
+  --bone: #fffff0;
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-friction: cubic-bezier(0.4, 0.02, 0.16, 1);
   --ease-release: cubic-bezier(0.16, 1, 0.3, 1);
@@ -93,7 +92,7 @@ body {
     color: var(--kw-rest, var(--bone));
   }
   to {
-    color: var(--bone-lit);
+    color: var(--bone);
   }
 }
 
@@ -128,7 +127,7 @@ body {
   }
 
   .kwChar {
-    color: var(--bone-lit);
+    color: var(--bone);
     font-variation-settings: "wght" 820;
   }
 }

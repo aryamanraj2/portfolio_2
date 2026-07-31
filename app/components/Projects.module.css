@@ -227,7 +227,7 @@
 }
 
 .mark {
-  color: var(--bone-lit);
+  color: var(--bone);
   font-variation-settings: "wght" 760;
   font-weight: 500;
 }
