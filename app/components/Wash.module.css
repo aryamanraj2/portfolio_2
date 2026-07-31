@@ -1,0 +1,18 @@
+.wash {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  contain: layout style paint;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  background-color: var(--ink);
+  will-change: opacity;
+}
+
+.flight {
+  opacity: 0;
+}

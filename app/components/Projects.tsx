@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ArrowUpRight } from "lucide-react";
 import styles from "./Projects.module.css";
 import Emphasis, { type Segment } from "./Emphasis";
+import { type TintKey } from "./Wash";
 
 type Project = {
   title: string;
+  tint: TintKey;
+  lite: string;
   tech: string[];
   note: Segment[];
 };
@@ -14,6 +23,8 @@ type Project = {
 const PROJECTS: Project[] = [
   {
     title: "Wandr",
+    tint: "wandr",
+    lite: "var(--wandr-lite)",
     tech: [
       "Swift",
       "SwiftUI",
@@ -30,6 +41,8 @@ const PROJECTS: Project[] = [
   },
   {
     title: "Saldo",
+    tint: "saldo",
+    lite: "var(--saldo-lite)",
     tech: [
       "Swift",
       "SwiftUI",
@@ -47,6 +60,8 @@ const PROJECTS: Project[] = [
   },
   {
     title: "AquaSense",
+    tint: "aqua",
+    lite: "var(--aqua-lite)",
     tech: [
       "Swift",
       "Vision",
@@ -163,8 +178,28 @@ const TechStrip = ({ tech, open }: { tech: string[]; open: boolean }) => {
   );
 };
 
-export default function Projects({ active = true }: { active?: boolean }) {
+export default function Projects({
+  active = true,
+  onTint,
+}: {
+  active?: boolean;
+  onTint?: (key: TintKey | null) => void;
+}) {
   const [open, setOpen] = useState<number | null>(null);
+  const tint = useRef(onTint);
+  tint.current = onTint;
+
+  const reach = useCallback((index: number | null) => {
+    setOpen(index);
+    tint.current?.(index === null ? null : PROJECTS[index].tint);
+  }, []);
+
+  useEffect(() => {
+    if (active) return;
+    tint.current?.(null);
+  }, [active]);
+
+  useEffect(() => () => tint.current?.(null), []);
 
   return (
     <section
@@ -177,17 +212,21 @@ export default function Projects({ active = true }: { active?: boolean }) {
         </header>
         <div
           className={`${styles.board} ${open !== null ? styles.focused : ""}`}
-          onMouseLeave={() => setOpen(null)}
+          onMouseLeave={() => reach(null)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) reach(null);
+          }}
         >
           {PROJECTS.map((project, index) => (
             <button
               key={project.title}
               type="button"
               className={`${styles.row} ${index === open ? styles.open : ""}`}
+              style={{ "--lite": project.lite } as CSSProperties}
               aria-expanded={index === open}
-              onMouseEnter={() => setOpen(index)}
-              onFocus={() => setOpen(index)}
-              onClick={() => setOpen(index)}
+              onMouseEnter={() => reach(index)}
+              onFocus={() => reach(index)}
+              onClick={() => reach(index)}
             >
               <span className={styles.index}>
                 {(index + 1).toString().padStart(2, "0")}
@@ -215,8 +254,8 @@ export default function Projects({ active = true }: { active?: boolean }) {
           <button
             type="button"
             className={styles.more}
-            onMouseEnter={() => setOpen(null)}
-            onFocus={() => setOpen(null)}
+            onMouseEnter={() => reach(null)}
+            onFocus={() => reach(null)}
           >
             <span className={styles.moreLabel}>View more</span>
             <span className={styles.moreIcon} aria-hidden="true">

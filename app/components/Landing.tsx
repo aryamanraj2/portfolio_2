@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import styles from "./Landing.module.css";
 import GithubCalendar from "./GithubCalendar";
@@ -8,6 +8,7 @@ import Emphasis, { type Segment } from "./Emphasis";
 import Lore from "./Lore";
 import Projects from "./Projects";
 import Stamp from "./Stamp";
+import Wash, { type TintKey, type WashHandle } from "./Wash";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -45,6 +46,11 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
+  const wash = useRef<WashHandle>(null);
+
+  const tint = useCallback((key: TintKey | null) => {
+    wash.current?.to(key);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -146,6 +152,7 @@ export default function Landing() {
     <div
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
+      <Wash ref={wash} />
       <Stamp active={phase === "inflate"} />
       <div className={styles.screen}>
         <div className={styles.hero}>
@@ -185,7 +192,7 @@ export default function Landing() {
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
         <Lore active={phase === "inflate"} />
-        <Projects active={phase === "inflate"} />
+        <Projects active={phase === "inflate"} onTint={tint} />
       </div>
     </div>
   );

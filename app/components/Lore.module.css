@@ -30,12 +30,13 @@
 
 .title {
   margin: 0;
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(2.1rem, 5vw, 3.6rem);
   line-height: 0.95;
   font-variation-settings: "wght" 900;
   letter-spacing: 0;
   opacity: 0.86;
+  transition: color 760ms var(--ease-soft);
 }
 
 .list {
@@ -55,12 +56,32 @@
   bottom: 0.4em;
   left: 0;
   width: 1px;
-  background: linear-gradient(
+  background-color: color-mix(in srgb, var(--bone) 50%, transparent);
+  -webkit-mask-image: linear-gradient(
     to bottom,
-    rgba(255, 255, 227, 0.12),
-    rgba(255, 255, 227, 0.5),
-    rgba(255, 255, 227, 0.12)
+    rgba(0, 0, 0, 0.24),
+    #000,
+    rgba(0, 0, 0, 0.24)
   );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.24),
+    #000,
+    rgba(0, 0, 0, 0.24)
+  );
+  transition: background-color 760ms var(--ease-soft);
+}
+
+:global(html[data-tint="wandr"]) .list::before {
+  background-color: color-mix(in srgb, var(--wandr-lite) 50%, transparent);
+}
+
+:global(html[data-tint="saldo"]) .list::before {
+  background-color: color-mix(in srgb, var(--saldo-lite) 50%, transparent);
+}
+
+:global(html[data-tint="aqua"]) .list::before {
+  background-color: color-mix(in srgb, var(--aqua-lite) 50%, transparent);
 }
 
 .entry {
@@ -86,6 +107,19 @@
   background: var(--bone);
   box-shadow: 0 0 0 7px rgba(255, 255, 227, 0.04);
   opacity: 0.88;
+  transition: background-color 760ms var(--ease-soft);
+}
+
+:global(html[data-tint="wandr"]) .entry::before {
+  background: var(--wandr-lite);
+}
+
+:global(html[data-tint="saldo"]) .entry::before {
+  background: var(--saldo-lite);
+}
+
+:global(html[data-tint="aqua"]) .entry::before {
+  background: var(--aqua-lite);
 }
 
 .active .entry {
@@ -145,14 +179,31 @@
   opacity: 0;
   transform: translateY(-50%) scale(0.5);
   transition: opacity 520ms var(--ease-soft), transform 520ms var(--ease-soft),
-    box-shadow 820ms var(--ease-soft);
+    box-shadow 820ms var(--ease-soft),
+    background-color 760ms var(--ease-soft),
+    border-color 760ms var(--ease-soft);
+}
+
+:global(html[data-tint="wandr"]) .origin {
+  background: var(--wandr-wash);
+  border-color: color-mix(in srgb, var(--wandr-lite) 82%, transparent);
+}
+
+:global(html[data-tint="saldo"]) .origin {
+  background: var(--saldo-wash);
+  border-color: color-mix(in srgb, var(--saldo-lite) 82%, transparent);
+}
+
+:global(html[data-tint="aqua"]) .origin {
+  background: var(--aqua-wash);
+  border-color: color-mix(in srgb, var(--aqua-lite) 82%, transparent);
 }
 
 .active .origin {
   opacity: 1;
   transform: translateY(-50%) scale(1);
   box-shadow: 0 0 0 9px rgba(255, 255, 227, 0.045);
-  transition-delay: 980ms;
+  transition-delay: 980ms, 980ms, 980ms, 0ms, 0ms;
 }
 
 .branchMap {
@@ -177,7 +228,19 @@
   stroke-dashoffset: 840;
   filter: drop-shadow(0 0 6px rgba(255, 255, 227, 0.13));
   transition: stroke-dashoffset 1500ms var(--ease-soft),
-    opacity 900ms var(--ease-soft);
+    opacity 900ms var(--ease-soft), stroke 760ms var(--ease-soft);
+}
+
+:global(html[data-tint="wandr"]) .branchLine {
+  stroke: color-mix(in srgb, var(--wandr-lite) 74%, transparent);
+}
+
+:global(html[data-tint="saldo"]) .branchLine {
+  stroke: color-mix(in srgb, var(--saldo-lite) 74%, transparent);
+}
+
+:global(html[data-tint="aqua"]) .branchLine {
+  stroke: color-mix(in srgb, var(--aqua-lite) 74%, transparent);
 }
 
 .active .branchLine {
@@ -185,15 +248,15 @@
 }
 
 .active .branchLine:nth-child(1) {
-  transition-delay: 1020ms;
+  transition-delay: 1020ms, 1020ms, 0ms;
 }
 
 .active .branchLine:nth-child(2) {
-  transition-delay: 1120ms;
+  transition-delay: 1120ms, 1120ms, 0ms;
 }
 
 .active .branchLine:nth-child(3) {
-  transition-delay: 1220ms;
+  transition-delay: 1220ms, 1220ms, 0ms;
 }
 
 .achievements {
@@ -258,33 +321,36 @@
 .achievementPeriod {
   display: block;
   margin-bottom: 5px;
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(0.7rem, 0.84vw, 0.78rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.38;
+  transition: color 760ms var(--ease-soft);
 }
 
 .achievementTitle {
   margin: 0;
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(1.02rem, 1.38vw, 1.24rem);
   line-height: 1.1;
   font-variation-settings: "wght" 760;
   letter-spacing: 0;
   opacity: 0.9;
+  transition: color 760ms var(--ease-soft);
 }
 
 .achievementNote {
   margin: 7px 0 0;
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(0.86rem, 1vw, 0.95rem);
   font-weight: 500;
   line-height: 1.48;
   letter-spacing: 0;
   opacity: 0.5;
+  transition: color 760ms var(--ease-soft);
 }
 
 .meta,
@@ -299,21 +365,23 @@
 }
 
 .role {
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(0.76rem, 1vw, 0.88rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1.2;
   text-transform: uppercase;
   opacity: 0.58;
+  transition: color 760ms var(--ease-soft);
 }
 
 .period {
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(0.78rem, 1vw, 0.9rem);
   font-weight: 500;
   line-height: 1.35;
   opacity: 0.38;
+  transition: color 760ms var(--ease-soft);
 }
 
 .body {
@@ -322,19 +390,21 @@
 
 .company {
   margin: 0;
-  color: var(--bone);
+  color: var(--soft);
   font-size: clamp(1.18rem, 2vw, 1.58rem);
   line-height: 1.08;
   font-variation-settings: "wght" 760;
   letter-spacing: 0;
   opacity: 0.9;
+  transition: color 760ms var(--ease-soft);
 }
 
 .note {
   --kw-rest: color-mix(in srgb, var(--bone) 58%, transparent);
   margin: 0;
   max-width: 58ch;
-  color: var(--kw-rest);
+  color: color-mix(in srgb, var(--soft) 58%, transparent);
+  transition: color 760ms var(--ease-soft);
   font-size: clamp(0.94rem, 1.25vw, 1.08rem);
   font-weight: 500;
   line-height: 1.55;

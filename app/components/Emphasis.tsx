@@ -3,6 +3,7 @@
 import {
   Fragment,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -60,7 +61,6 @@ export default function Emphasis({
 }) {
   const root = useRef<HTMLSpanElement>(null);
   const [lit, setLit] = useState(false);
-  const nodes = build(parts);
 
   useEffect(() => {
     const node = root.current;
@@ -112,48 +112,52 @@ export default function Emphasis({
     return () => clearTimeout(id);
   }, [play]);
 
-  const token = (item: Token, key: number) =>
-    item.kind === "word" ? (
-      <span
-        key={key}
-        className="kwWord"
-        style={{ "--b": item.base } as CSSProperties}
-      >
-        {item.text}
-      </span>
-    ) : (
-      <span key={key} className="kw">
-        {item.chars.map((char, j) => (
-          <span
-            key={j}
-            className="kwChar"
-            data-c={char}
-            style={{ "--b": item.base, "--i": item.base + j } as CSSProperties}
-          >
-            {char}
-          </span>
-        ))}
-      </span>
-    );
+  const content = useMemo(() => {
+    const token = (item: Token, key: number) =>
+      item.kind === "word" ? (
+        <span
+          key={key}
+          className="kwWord"
+          style={{ "--b": item.base } as CSSProperties}
+        >
+          {item.text}
+        </span>
+      ) : (
+        <span key={key} className="kw">
+          {item.chars.map((char, j) => (
+            <span
+              key={j}
+              className="kwChar"
+              data-c={char}
+              style={{ "--b": item.base, "--i": item.base + j } as CSSProperties}
+            >
+              {char}
+            </span>
+          ))}
+        </span>
+      );
+
+    return build(parts).map((node, idx) => {
+      if (node.kind === "space") {
+        return <Fragment key={idx}>{node.text}</Fragment>;
+      }
+
+      if (node.items.length === 1) return token(node.items[0], idx);
+
+      return (
+        <span key={idx} className="kwHold">
+          {node.items.map((item, j) => token(item, j))}
+        </span>
+      );
+    });
+  }, [parts]);
 
   return (
     <span
       ref={root}
       className={play === undefined || lit ? "kwRun" : "kwRun kwIdle"}
     >
-      {nodes.map((node, idx) => {
-        if (node.kind === "space") {
-          return <Fragment key={idx}>{node.text}</Fragment>;
-        }
-
-        if (node.items.length === 1) return token(node.items[0], idx);
-
-        return (
-          <span key={idx} className="kwHold">
-            {node.items.map((item, j) => token(item, j))}
-          </span>
-        );
-      })}
+      {content}
     </span>
   );
 }

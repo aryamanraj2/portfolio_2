@@ -2,10 +2,37 @@
   --ink: #000000;
   --bone: #fffff0;
   --neon: #edff00;
+
+  --wandr-lite: #afcfd1;
+  --wandr-dark: #383c62;
+  --wandr-wash: #15172e;
+
+  --saldo-lite: #a3c7a4;
+  --saldo-dark: #5b984a;
+  --saldo-wash: #121f10;
+
+  --aqua-lite: #feffff;
+  --aqua-dark: #2a496a;
+  --aqua-wash: #0c1b28;
+
+  --soft: var(--bone);
+
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-friction: cubic-bezier(0.4, 0.02, 0.16, 1);
   --ease-release: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 0.7, 0.4);
+}
+
+html[data-tint="wandr"] {
+  --soft: color-mix(in srgb, var(--wandr-lite) 68%, var(--bone));
+}
+
+html[data-tint="saldo"] {
+  --soft: color-mix(in srgb, var(--saldo-lite) 68%, var(--bone));
+}
+
+html[data-tint="aqua"] {
+  --soft: color-mix(in srgb, var(--aqua-lite) 68%, var(--bone));
 }
 
 * {
@@ -97,7 +124,7 @@ body {
     color: var(--kw-rest, var(--bone));
   }
   to {
-    color: var(--bone);
+    color: var(--kw-hot, var(--bone));
   }
 }
 
@@ -142,7 +169,7 @@ body {
   }
 
   .kwChar {
-    color: var(--bone);
+    color: var(--kw-hot, var(--bone));
     font-variation-settings: "wght" 820;
   }
 }
