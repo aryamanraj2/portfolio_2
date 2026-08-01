@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Download, Minus, Plus, RotateCcw } from "lucide-react";
+import { Download, Minus, Plus, RotateCcw } from "lucide-react";
 import type {
   PDFDocumentLoadingTask,
   PDFDocumentProxy,
@@ -53,6 +52,7 @@ export default function Viewer({
   const loader = useRef<PDFDocumentLoadingTask | null>(null);
   const stage = useRef<HTMLDivElement>(null);
   const canvases = useRef(new Map<number, HTMLCanvasElement>());
+  const fetched = useRef<string | null>(null);
 
   const nudge = useCallback((factor: number) => {
     setZoom((current) => clampZoom(current * factor));
@@ -81,6 +81,20 @@ export default function Viewer({
     const raf = requestAnimationFrame(() => setEnter(true));
     return () => cancelAnimationFrame(raf);
   }, []);
+
+  useEffect(() => {
+    if (fetched.current === file) return;
+    fetched.current = file;
+
+    const link = document.createElement("a");
+    link.href = file;
+    link.download = downloadAs;
+    link.rel = "noopener";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [file, downloadAs]);
 
   useEffect(() => {
     let cancelled = false;
@@ -222,12 +236,6 @@ export default function Viewer({
   return (
     <div className={`${styles.root} ${enter ? styles.enter : ""}`}>
       <header className={styles.bar}>
-        <Link className={styles.back} href="/">
-          <span className={styles.backIcon}>
-            <ArrowLeft size={16} strokeWidth={1.8} />
-          </span>
-          <span className={styles.backLabel}>Aryaman Jaiswal</span>
-        </Link>
         <p className={styles.title}>
           résumé
           {sheets.length > 1 ? (

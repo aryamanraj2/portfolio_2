@@ -24,7 +24,6 @@
   border-bottom: 1px solid color-mix(in srgb, var(--bone) 12%, transparent);
 }
 
-.back,
 .action {
   display: inline-flex;
   align-items: center;
@@ -37,19 +36,16 @@
   letter-spacing: -0.01em;
 }
 
-.back:focus-visible,
 .action:focus-visible {
   outline: none;
 }
 
-.backLabel,
 .actionLabel {
   position: relative;
   opacity: 0.6;
   transition: opacity 320ms var(--ease-exit);
 }
 
-.backLabel::after,
 .actionLabel::after {
   content: "";
   position: absolute;
@@ -63,15 +59,11 @@
   transition: transform 300ms var(--ease-exit);
 }
 
-.back:hover .backLabel,
-.back:focus-visible .backLabel,
 .action:hover .actionLabel,
 .action:focus-visible .actionLabel {
   opacity: 1;
 }
 
-.back:hover .backLabel::after,
-.back:focus-visible .backLabel::after,
 .action:hover .actionLabel::after,
 .action:focus-visible .actionLabel::after {
   transform: none;
@@ -79,25 +71,11 @@
   transition: transform 460ms var(--ease-friction);
 }
 
-.backIcon,
 .arrow {
   display: inline-flex;
   opacity: 0.4;
-  transition: opacity 320ms var(--ease-exit), transform 380ms var(--ease-exit);
-}
-
-.backIcon {
-  transform: translateX(3px);
-}
-
-.arrow {
   transform: translate(-3px, 3px);
-}
-
-.back:hover .backIcon,
-.back:focus-visible .backIcon {
-  opacity: 1;
-  transform: none;
+  transition: opacity 320ms var(--ease-exit), transform 380ms var(--ease-exit);
 }
 
 .action:hover .arrow,
