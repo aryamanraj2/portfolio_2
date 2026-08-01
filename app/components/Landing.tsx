@@ -10,6 +10,7 @@ import Projects from "./Projects";
 import SideQuests from "./SideQuests";
 import Stamp from "./Stamp";
 import Wash, { type TintKey, type WashHandle } from "./Wash";
+import type { Rotation } from "@/app/lib/music";
 
 const GITHUB_USER = "aryamanraj2";
 
@@ -43,7 +44,7 @@ type Phase = "terminal" | "morph" | "name" | "inflate";
 const settled = (text: string): Cell[] =>
   text.split("").map((char) => ({ char, scrambling: false }));
 
-export default function Landing() {
+export default function Landing({ rotation }: { rotation: Rotation }) {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
@@ -210,7 +211,7 @@ export default function Landing() {
         </div>
         <Lore active={phase === "inflate"} />
         <Projects active={phase === "inflate"} onTint={tint} />
-        <SideQuests active={phase === "inflate"} />
+        <SideQuests active={phase === "inflate"} rotation={rotation} />
       </div>
     </div>
   );

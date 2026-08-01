@@ -1,16 +1,14 @@
-"use client";
+import Shell from "./components/Shell";
+import { getRotation } from "./lib/music";
 
-import { useState } from "react";
-import Loader from "./components/Loader";
-import Landing from "./components/Landing";
+export const revalidate = 21600;
 
-export default function Home() {
-  const [loaded, setLoaded] = useState(false);
+export default async function Home() {
+  const rotation = await getRotation();
 
   return (
     <main>
-      {!loaded && <Loader onDone={() => setLoaded(true)} />}
-      {loaded && <Landing />}
+      <Shell rotation={rotation} />
     </main>
   );
 }
