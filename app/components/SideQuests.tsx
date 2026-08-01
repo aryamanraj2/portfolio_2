@@ -6,6 +6,7 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
+  type ReactNode,
 } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -48,16 +49,21 @@ const LIFTS = [
 
 const TOTAL = LIFTS.reduce((sum, lift) => sum + lift.lbs, 0);
 const GAP = GOAL - TOTAL;
-const FILL = (TOTAL / GOAL) * 100;
 
-const STACK = LIFTS.map((lift, i) => {
-  const below = LIFTS.slice(0, i).reduce((sum, l) => sum + l.lbs, 0);
-  return {
-    ...lift,
-    span: (lift.lbs / GOAL) * 100,
-    mid: ((below + lift.lbs / 2) / GOAL) * 100,
-  };
-});
+const STEPS = 22;
+const BUS_STEPS = 28;
+
+const TOP_LIFT = LIFTS.reduce((top, lift) => (lift.lbs > top ? lift.lbs : top), 0);
+
+const CHANNELS = LIFTS.map((lift, i) => ({
+  ...lift,
+  id: `Ch${i + 1}`,
+  on: Math.max(1, Math.round((lift.lbs / TOP_LIFT) * STEPS)),
+}));
+
+const BUS_ON = Math.round((TOTAL / GOAL) * BUS_STEPS);
+
+const lit = (on: number, steps: number): string => `${(on / steps) * 100}%`;
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep",
   "oct", "nov", "dec"];
@@ -82,47 +88,44 @@ const settled = (text: string): Cell[] =>
 
 const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 
-type RowProps = {
-  link: string | null;
-  art: string | null;
-  plays: number;
-  lead: string;
-  sub?: string;
-};
+const pad = (value: number): string => String(value).padStart(2, "0");
 
-function Row({ link, art, plays, lead, sub }: RowProps) {
-  const body = (
-    <>
+function Cell({
+  link,
+  shape,
+  children,
+}: {
+  link: string | null;
+  shape: string;
+  children: ReactNode;
+}) {
+  if (!link) return <div className={shape}>{children}</div>;
+
+  return (
+    <a
+      className={`${shape} ${styles.linked}`}
+      href={link}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      {children}
+    </a>
+  );
+}
+
+function Sleeve({ art, big = false }: { art: string | null; big?: boolean }) {
+  return (
+    <span className={`${styles.sleeve} ${big ? styles.plate12 : ""}`}>
       {art ? (
         <img
-          className={styles.art}
+          className={styles.artwork}
           src={art}
           alt=""
           loading="lazy"
           decoding="async"
         />
-      ) : (
-        <span className={styles.art} aria-hidden="true" />
-      )}
-      <span className={styles.names}>
-        <span className={styles.lead}>{lead}</span>
-        {sub ? <span className={styles.sub}>{sub}</span> : null}
-      </span>
-      <span className={styles.plays}>{plays > 0 ? plays : "—"}</span>
-    </>
-  );
-
-  if (!link) return <span className={styles.row}>{body}</span>;
-
-  return (
-    <a
-      className={`${styles.row} ${styles.linked}`}
-      href={link}
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      {body}
-    </a>
+      ) : null}
+    </span>
   );
 }
 
@@ -212,51 +215,66 @@ export default function SideQuests({
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ paused: true, defaults: { ease: slam } });
+      const ladders = Array.from(
+        node.querySelectorAll<HTMLElement>("[data-ladder]"),
+      );
 
-      tl.from(
-        "[data-frame]",
-        { scaleY: 0, duration: 0.5, transformOrigin: "bottom" },
+      gsap.set(ladders, { "--fill": "0%" });
+
+      tl.to(
+        "[data-count]",
+        {
+          duration: 1.1,
+          ease: "none",
+          scrambleText: {
+            text: String(TOTAL),
+            chars: "0123456789",
+            speed: 0.7,
+            revealDelay: 0.25,
+          },
+        },
         0,
       )
         .from(
-          "[data-band]",
-          { height: 0, duration: 0.42, stagger: 0.14, clearProps: "height" },
-          0.15,
+          "[data-chid]",
+          { opacity: 0, y: -6, duration: 0.3, stagger: 0.09 },
+          0.08,
         )
-        .to(
-          "[data-count]",
+        .from(
+          "[data-chname]",
+          { opacity: 0, x: -8, duration: 0.34, stagger: 0.09 },
+          0.72,
+        )
+        .from(
+          "[data-chval]",
+          { opacity: 0, y: 7, duration: 0.32, stagger: 0.05 },
+          0.8,
+        )
+        .from("[data-peak]", { opacity: 0, duration: 0.22, stagger: 0.13 }, 0.94)
+        .from("[data-target]", { opacity: 0, duration: 0.3 }, 1.06)
+        .from("[data-out]", { opacity: 0, x: -8, duration: 0.34 }, 1.2);
+
+      ladders.forEach((rail, i) => {
+        const steps = Number(rail.dataset.steps);
+        const rungs = Number(rail.dataset.on);
+        const level = { on: 0 };
+
+        tl.to(
+          level,
           {
-            duration: 1.1,
-            ease: "none",
-            scrambleText: {
-              text: String(TOTAL),
-              chars: "0123456789",
-              speed: 0.7,
-              revealDelay: 0.25,
+            on: rungs,
+            duration: 0.74,
+            snap: { on: 1 },
+            onUpdate: () => {
+              rail.style.setProperty(
+                "--fill",
+                `${(level.on / steps) * 100}%`,
+              );
             },
           },
-          0.15,
-        )
-        .from(
-          "[data-line]",
-          { scaleX: 0, duration: 0.34, stagger: 0.08 },
-          0.62,
-        )
-        .from(
-          "[data-ch]",
-          { opacity: 0, yPercent: 40, duration: 0.3, stagger: 0.012 },
-          0.7,
-        )
-        .from(
-          "[data-val]",
-          { opacity: 0, x: -8, duration: 0.34, stagger: 0.08 },
-          0.78,
-        )
-        .from("[data-crest]", { scaleX: 0, duration: 0.45 }, 0.88)
-        .from("[data-goal]", { scaleX: 0, duration: 0.5 }, 0.95)
-        .from("[data-cap]", { opacity: 0, duration: 0.3 }, 1.05)
-        .from("[data-out]", { opacity: 0, x: -8, duration: 0.34 }, 1.15)
-        .from("[data-void]", { opacity: 0, duration: 0.44 }, 1.25);
+          0.18 + i * 0.13,
+        );
+      });
 
       io = new IntersectionObserver(
         (entries) => {
@@ -353,126 +371,145 @@ export default function SideQuests({
               <span className={styles.kicker}>{item.kicker}</span>
 
               {item.id === "pr" ? (
-                <div
-                  className={styles.rig}
-                  ref={rig}
-                  style={{ "--fill": `${FILL}%` } as CSSProperties}
-                >
-                  <div className={styles.readout}>
-                    <span className={styles.tally}>
-                      <span className={styles.count} data-count>
-                        {TOTAL}
+                <div className={styles.rig} ref={rig}>
+                  <div className={styles.masthead}>
+                    <div className={styles.readout}>
+                      <span className={styles.tag}>Total</span>
+                      <span className={styles.tally}>
+                        <span className={styles.count} data-count>
+                          {TOTAL}
+                        </span>
+                        <span className={styles.unit}>lbs</span>
                       </span>
-                      <span className={styles.of}>of {GOAL} lbs</span>
-                    </span>
-                    <span className={styles.out} data-out>
-                      {GAP} lbs out
-                    </span>
+                    </div>
+
+                    <div className={styles.target}>
+                      <span className={styles.tag}>Target</span>
+                      <span className={styles.targetVal} data-target>
+                        {GOAL}
+                      </span>
+                      <span className={styles.out} data-out>
+                        {GAP} lbs out
+                      </span>
+                    </div>
                   </div>
 
-                  <div className={styles.elevation}>
-                    <div className={styles.column}>
-                      <span
-                        className={styles.frame}
-                        data-frame
-                        aria-hidden="true"
-                      />
-                      <span className={styles.void} data-void aria-hidden="true" />
-                      <div className={styles.stack} aria-hidden="true">
-                        {STACK.map((band) => (
-                          <span
-                            key={band.name}
-                            className={styles.band}
-                            data-band
-                            style={{ "--b": band.span } as CSSProperties}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className={styles.annotations}>
-                      <span
-                        className={styles.goal}
-                        style={{ "--y": "100%" } as CSSProperties}
-                      >
-                        <span
-                          className={styles.goalRule}
-                          data-goal
+                  <div className={styles.channels}>
+                    {CHANNELS.map((channel) => (
+                      <div className={styles.channel} key={channel.name}>
+                        <span className={styles.chId} data-chid>
+                          {channel.id}
+                        </span>
+                        <div
+                          className={styles.ladder}
+                          data-ladder
+                          data-on={channel.on}
+                          data-steps={STEPS}
+                          style={
+                            { "--fill": lit(channel.on, STEPS) } as CSSProperties
+                          }
                           aria-hidden="true"
-                        />
-                        <span className={styles.goalCap} data-cap>
-                          {GOAL}
-                        </span>
-                      </span>
-
-                      <span
-                        className={styles.crest}
-                        style={{ "--y": "var(--fill)" } as CSSProperties}
-                        aria-hidden="true"
-                      >
-                        <span className={styles.crestRule} data-crest />
-                        <span className={`${styles.goalCap} ${styles.ghostCap}`}>
-                          {GOAL}
-                        </span>
-                      </span>
-
-                      {STACK.map((band) => (
-                        <span
-                          key={band.name}
-                          className={styles.note}
-                          style={{ "--y": `${band.mid}%` } as CSSProperties}
                         >
-                          <span
-                            className={styles.noteLine}
-                            data-line
-                            aria-hidden="true"
-                          />
-                          <span className={styles.noteName}>
-                            {[...band.name].map((char, j) => (
-                              <span key={j} className={styles.ch} data-ch>
-                                {char}
-                              </span>
-                            ))}
+                          <span className={styles.rungs} />
+                          <span className={styles.lit} />
+                          <span className={styles.peak} data-peak />
+                        </div>
+                        <div className={styles.chFoot}>
+                          <span className={styles.chName} data-chname>
+                            {channel.name}
                           </span>
-                          <span className={styles.noteVal} data-val>
-                            <span className={styles.noteLbs}>{band.lbs}</span>
-                            <span className={styles.noteKg}>{band.kg} kg</span>
+                          <span className={styles.chLbs} data-chval>
+                            {channel.lbs}
                           </span>
-                        </span>
-                      ))}
+                          <span className={styles.chKg} data-chval>
+                            {channel.kg} kg
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className={styles.master}>
+                    <span className={styles.tag}>Master</span>
+                    <div
+                      className={styles.busTrack}
+                      data-ladder
+                      data-on={BUS_ON}
+                      data-steps={BUS_STEPS}
+                      style={
+                        { "--fill": lit(BUS_ON, BUS_STEPS) } as CSSProperties
+                      }
+                      aria-hidden="true"
+                    >
+                      <span className={styles.busRungs} />
+                      <span className={styles.busLit} />
                     </div>
+                    <span className={styles.tag}>{GOAL}</span>
                   </div>
                 </div>
               ) : (
-                <div className={styles.music}>
-                  <section className={styles.col}>
-                    <h3 className={styles.colHead}>Tracks</h3>
+                <div className={styles.rotation}>
+                  <section className={styles.wing} aria-label="Top tracks">
+                    <h3 className={styles.wingHead}>
+                      <span>Tracks</span>
+                      <span className={styles.unitLabel}>Plays</span>
+                    </h3>
                     <ol className={styles.list}>
-                      {rotation.tracks.map((track) => (
-                        <li key={`${track.rank}-${track.title}`}>
-                          <Row
-                            link={track.link}
-                            art={track.art}
-                            plays={track.plays}
-                            lead={track.title}
-                            sub={track.artist}
-                          />
+                      {rotation.tracks.map((track, i) => (
+                        <li
+                          key={`${track.rank}-${track.title}`}
+                          className={styles.slot}
+                          style={{ "--i": i } as CSSProperties}
+                        >
+                          <Cell link={track.link} shape={styles.cut}>
+                            <span className={styles.rank}>
+                              {pad(track.rank)}
+                            </span>
+                            <Sleeve art={track.art} />
+                            <span className={styles.names}>
+                              <span className={styles.lead}>{track.title}</span>
+                              <span className={styles.sub}>{track.artist}</span>
+                            </span>
+                            <span className={styles.plays}>
+                              {track.plays > 0 ? track.plays : "—"}
+                            </span>
+                          </Cell>
                         </li>
                       ))}
                     </ol>
                   </section>
 
-                  <section className={styles.col}>
-                    <h3 className={styles.colHead}>Artists</h3>
+                  <section
+                    className={`${styles.wing} ${styles.faces}`}
+                    aria-label="Top artists"
+                  >
+                    <h3 className={styles.wingHead}>
+                      <span>Artists</span>
+                      <span className={styles.unitLabel}>Plays</span>
+                    </h3>
                     <ol className={styles.list}>
-                      {rotation.artists.map((artist) => (
-                        <li key={`${artist.rank}-${artist.name}`}>
-                          <Row
-                            link={artist.link}
-                            art={artist.art}
-                            plays={artist.plays}
-                            lead={artist.name}
-                          />
+                      {rotation.artists.map((artist, i) => (
+                        <li
+                          key={`${artist.rank}-${artist.name}`}
+                          className={styles.slot}
+                          style={
+                            {
+                              "--i": rotation.tracks.length + i,
+                            } as CSSProperties
+                          }
+                        >
+                          <Cell link={artist.link} shape={styles.face}>
+                            <span className={styles.rank}>
+                              {pad(artist.rank)}
+                            </span>
+                            <Sleeve art={artist.art} big />
+                            <span className={styles.names}>
+                              <span className={styles.lead}>{artist.name}</span>
+                            </span>
+                            <span className={styles.plays}>
+                              {artist.plays > 0 ? artist.plays : "—"}
+                            </span>
+                          </Cell>
                         </li>
                       ))}
                     </ol>
