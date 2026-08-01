@@ -47,10 +47,25 @@ export default function Landing() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const wash = useRef<WashHandle>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   const tint = useCallback((key: TintKey | null) => {
     wash.current?.to(key);
+  }, []);
+
+  useEffect(() => {
+    const node = rootRef.current;
+    if (!node) return;
+
+    const onScroll = () => {
+      setScrolled(true);
+      node.removeEventListener("scroll", onScroll);
+    };
+
+    node.addEventListener("scroll", onScroll, { passive: true });
+    return () => node.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -151,6 +166,7 @@ export default function Landing() {
 
   return (
     <div
+      ref={rootRef}
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
       <Wash ref={wash} />
@@ -175,7 +191,7 @@ export default function Landing() {
             <div className={styles.bio}>
               {BIO.map((line, i) => (
                 <p key={i} className={styles.description}>
-                  <Emphasis parts={line} />
+                  <Emphasis parts={line} play={scrolled} />
                 </p>
               ))}
             </div>

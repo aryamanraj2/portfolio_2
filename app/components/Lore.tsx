@@ -1,4 +1,7 @@
+"use client";
+
 import Emphasis, { type Segment } from "./Emphasis";
+import { useRevealed } from "@/app/lib/useRevealed";
 import styles from "./Lore.module.css";
 
 type Entry = {
@@ -54,6 +57,11 @@ const ENTRIES: Entry[] = [
 ];
 
 export default function Lore({ active = true }: { active?: boolean }) {
+  const [note0, on0] = useRevealed<HTMLParagraphElement>();
+  const [note1, on1] = useRevealed<HTMLParagraphElement>();
+  const [note2, on2] = useRevealed<HTMLParagraphElement>();
+  const [note3, on3] = useRevealed<HTMLParagraphElement>();
+
   return (
     <section
       className={`${styles.lore} ${active ? styles.active : ""}`}
@@ -71,8 +79,8 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[0].company}</h3>
-              <p className={styles.note}>
-                <Emphasis parts={ENTRIES[0].note} />
+              <p className={styles.note} ref={note0}>
+                <Emphasis parts={ENTRIES[0].note} play={on0} />
               </p>
             </article>
           </li>
@@ -83,8 +91,8 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[1].company}</h3>
-              <p className={styles.note}>
-                <Emphasis parts={ENTRIES[1].note} />
+              <p className={styles.note} ref={note1}>
+                <Emphasis parts={ENTRIES[1].note} play={on1} />
               </p>
             </article>
           </li>
@@ -95,8 +103,8 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[2].company}</h3>
-              <p className={styles.note}>
-                <Emphasis parts={ENTRIES[2].note} />
+              <p className={styles.note} ref={note2}>
+                <Emphasis parts={ENTRIES[2].note} play={on2} />
               </p>
             </article>
           </li>
@@ -107,8 +115,8 @@ export default function Lore({ active = true }: { active?: boolean }) {
             </div>
             <article className={styles.body}>
               <h3 className={styles.company}>{ENTRIES[3].company}</h3>
-              <p className={styles.note}>
-                <Emphasis parts={ENTRIES[3].note} />
+              <p className={styles.note} ref={note3}>
+                <Emphasis parts={ENTRIES[3].note} play={on3} />
               </p>
             </article>
           </li>

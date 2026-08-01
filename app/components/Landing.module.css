@@ -294,7 +294,6 @@
 
 .inflate .bio .description:nth-child(2) {
   transition-delay: 320ms, 320ms, 320ms, 0ms;
-  --kw-delay: 1680ms;
 }
 
 .inflate .description {
