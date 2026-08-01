@@ -123,8 +123,7 @@
   flex: 1;
   min-height: 0;
   padding: clamp(12px, 2.2vw, 32px);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
 }
@@ -137,9 +136,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-items: safe center;
   justify-content: center;
+  justify-content: safe center;
   gap: clamp(12px, 2vw, 24px);
   min-height: 100%;
+  min-width: 100%;
+  width: fit-content;
   opacity: 0;
   transition: opacity 620ms var(--ease-soft);
 }
@@ -151,8 +154,11 @@
 .page {
   position: relative;
   flex: none;
-  width: 100%;
-  max-width: min(960px, calc(var(--stage-h, 78vh) * var(--ratio, 0.77)));
+  width: calc(100% * var(--zoom, 1));
+  max-width: calc(
+    min(960px, calc(var(--stage-h, 78vh) * var(--ratio, 0.77))) *
+      var(--zoom, 1)
+  );
   aspect-ratio: var(--ratio, 0.77);
   border: 1px solid color-mix(in srgb, var(--bone) 12%, transparent);
   background: color-mix(in srgb, var(--bone) 4%, transparent);
@@ -193,6 +199,74 @@
 
 .status.gone {
   opacity: 0;
+}
+
+.island {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3.4vh, 34px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--bone) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 82%, var(--bone));
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity 520ms var(--ease-soft), transform 520ms var(--ease-soft);
+}
+
+.island.afloat {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--bone);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 240ms var(--ease-exit), background 240ms var(--ease-exit);
+}
+
+.control:hover:not(:disabled),
+.control:focus-visible:not(:disabled) {
+  outline: none;
+  opacity: 1;
+  background: color-mix(in srgb, var(--bone) 12%, transparent);
+}
+
+.control:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.readout {
+  min-width: 46px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  opacity: 0.6;
+  user-select: none;
+}
+
+.divider {
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: color-mix(in srgb, var(--bone) 16%, transparent);
 }
 
 .fallback {

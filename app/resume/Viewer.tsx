@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Minus, Plus, RotateCcw } from "lucide-react";
 import type {
   PDFDocumentLoadingTask,
   PDFDocumentProxy,
@@ -27,6 +27,14 @@ type Sheet = {
 type Status = "loading" | "ready" | "error";
 
 const MAX_DPR = 2.5;
+const MAX_CANVAS = 4096;
+const MAX_PIXELS = 16_000_000;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
+const STEP = 1.25;
+
+const clampZoom = (value: number) =>
+  Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(value * 100) / 100));
 
 export default function Viewer({
   file,
@@ -39,11 +47,35 @@ export default function Viewer({
   const [sheets, setSheets] = useState<Sheet[]>([]);
   const [painted, setPainted] = useState(false);
   const [enter, setEnter] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   const doc = useRef<PDFDocumentProxy | null>(null);
   const loader = useRef<PDFDocumentLoadingTask | null>(null);
   const stage = useRef<HTMLDivElement>(null);
   const canvases = useRef(new Map<number, HTMLCanvasElement>());
+
+  const nudge = useCallback((factor: number) => {
+    setZoom((current) => clampZoom(current * factor));
+  }, []);
+
+  const reset = useCallback(() => {
+    setZoom(1);
+    stage.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key === "+" || event.key === "=") nudge(STEP);
+      else if (event.key === "-") nudge(1 / STEP);
+      else if (event.key === "0") reset();
+      else return;
+      event.preventDefault();
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [nudge, reset]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setEnter(true));
@@ -133,7 +165,12 @@ export default function Viewer({
 
         const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
         const base = page.getViewport({ scale: 1 });
-        const viewport = page.getViewport({ scale: (width * dpr) / base.width });
+        const scale = Math.min(
+          (width * dpr) / base.width,
+          MAX_CANVAS / base.width,
+          Math.sqrt(MAX_PIXELS / (base.width * base.height))
+        );
+        const viewport = page.getViewport({ scale });
 
         canvas.width = Math.round(viewport.width);
         canvas.height = Math.round(viewport.height);
@@ -180,7 +217,7 @@ export default function Viewer({
       cancelAnimationFrame(frame);
       tasks.forEach((task) => task.cancel());
     };
-  }, [sheets]);
+  }, [sheets, zoom]);
 
   return (
     <div className={`${styles.root} ${enter ? styles.enter : ""}`}>
@@ -224,7 +261,9 @@ export default function Viewer({
               <div
                 key={sheet.number}
                 className={styles.page}
-                style={{ "--ratio": sheet.ratio } as React.CSSProperties}
+                style={
+                  { "--ratio": sheet.ratio, "--zoom": zoom } as React.CSSProperties
+                }
               >
                 <canvas
                   className={styles.canvas}
@@ -260,6 +299,40 @@ export default function Viewer({
           </p>
         ) : null}
       </main>
+
+      {status === "ready" ? (
+        <div className={`${styles.island} ${painted ? styles.afloat : ""}`}>
+          <button
+            type="button"
+            className={styles.control}
+            onClick={() => nudge(1 / STEP)}
+            disabled={zoom <= MIN_ZOOM}
+            aria-label="Zoom out"
+          >
+            <Minus size={15} strokeWidth={2} />
+          </button>
+          <span className={styles.readout}>{Math.round(zoom * 100)}%</span>
+          <button
+            type="button"
+            className={styles.control}
+            onClick={() => nudge(STEP)}
+            disabled={zoom >= MAX_ZOOM}
+            aria-label="Zoom in"
+          >
+            <Plus size={15} strokeWidth={2} />
+          </button>
+          <span className={styles.divider} />
+          <button
+            type="button"
+            className={styles.control}
+            onClick={reset}
+            disabled={zoom === 1}
+            aria-label="Reset zoom"
+          >
+            <RotateCcw size={14} strokeWidth={2} />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
