@@ -11,6 +11,7 @@ import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import styles from "./SideQuests.module.css";
+import type { Rotation } from "@/app/lib/music";
 
 type Quest = {
   id: string;
@@ -32,8 +33,8 @@ const QUESTS: Quest[] = [
     id: "music",
     tab: "Music",
     title: "On Repeat",
-    kicker: "Currently looping",
-    status: "coming soon",
+    kicker: "Last 30 days",
+    status: "",
   },
 ];
 
@@ -58,8 +59,15 @@ const STACK = LIFTS.map((lift, i) => {
   };
 });
 
-const BARS = [0.52, 0.9, 0.34, 1, 0.62, 0.42, 0.94, 0.26, 0.74, 0.48, 0.86, 0.36,
-  0.66, 0.8, 0.44, 0.96];
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep",
+  "oct", "nov", "dec"];
+
+const stamp = (iso: string): string => {
+  if (!iso) return "sample rotation";
+  const at = new Date(iso);
+  if (Number.isNaN(at.getTime())) return "sample rotation";
+  return `updated ${at.getUTCDate()} ${MONTHS[at.getUTCMonth()]}`;
+};
 
 const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
@@ -74,7 +82,57 @@ const settled = (text: string): Cell[] =>
 
 const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 
-export default function SideQuests({ active = true }: { active?: boolean }) {
+type RowProps = {
+  link: string | null;
+  art: string | null;
+  plays: number;
+  lead: string;
+  sub?: string;
+};
+
+function Row({ link, art, plays, lead, sub }: RowProps) {
+  const body = (
+    <>
+      {art ? (
+        <img
+          className={styles.art}
+          src={art}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span className={styles.art} aria-hidden="true" />
+      )}
+      <span className={styles.names}>
+        <span className={styles.lead}>{lead}</span>
+        {sub ? <span className={styles.sub}>{sub}</span> : null}
+      </span>
+      <span className={styles.plays}>{plays > 0 ? plays : "—"}</span>
+    </>
+  );
+
+  if (!link) return <span className={styles.row}>{body}</span>;
+
+  return (
+    <a
+      className={`${styles.row} ${styles.linked}`}
+      href={link}
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      {body}
+    </a>
+  );
+}
+
+export default function SideQuests({
+  active = true,
+  rotation,
+}: {
+  active?: boolean;
+  rotation: Rotation;
+}) {
   const [index, setIndex] = useState(0);
   const [cells, setCells] = useState<Cell[]>(() => settled(QUESTS[0].title));
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -387,31 +445,44 @@ export default function SideQuests({ active = true }: { active?: boolean }) {
                 </div>
               ) : (
                 <div className={styles.music}>
-                  <span className={styles.eq} aria-hidden="true">
-                    {BARS.map((peak, k) => (
-                      <span
-                        key={k}
-                        className={styles.bar}
-                        style={
-                          {
-                            "--p": peak,
-                            "--d": `${(k % 7) * -0.19 - 0.05}s`,
-                            "--s": `${0.82 + (k % 4) * 0.15}s`,
-                          } as CSSProperties
-                        }
-                      />
-                    ))}
-                  </span>
-                  <p className={styles.line}>
-                    The rotation that runs behind every build — records, films,
-                    and whatever book is open.
-                  </p>
+                  <section className={styles.col}>
+                    <h3 className={styles.colHead}>Tracks</h3>
+                    <ol className={styles.list}>
+                      {rotation.tracks.map((track) => (
+                        <li key={`${track.rank}-${track.title}`}>
+                          <Row
+                            link={track.link}
+                            art={track.art}
+                            plays={track.plays}
+                            lead={track.title}
+                            sub={track.artist}
+                          />
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+
+                  <section className={styles.col}>
+                    <h3 className={styles.colHead}>Artists</h3>
+                    <ol className={styles.list}>
+                      {rotation.artists.map((artist) => (
+                        <li key={`${artist.rank}-${artist.name}`}>
+                          <Row
+                            link={artist.link}
+                            art={artist.art}
+                            plays={artist.plays}
+                            lead={artist.name}
+                          />
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
                 </div>
               )}
 
               <span className={styles.status}>
                 <span className={styles.caret} aria-hidden="true" />
-                {item.status}
+                {item.id === "music" ? stamp(rotation.updated) : item.status}
               </span>
             </div>
           ))}
