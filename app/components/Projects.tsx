@@ -15,6 +15,7 @@ type Project = {
   title: string;
   tint: TintKey;
   lite: string;
+  repo: string;
   tech: string[];
   note: Segment[];
 };
@@ -24,6 +25,7 @@ const PROJECTS: Project[] = [
     title: "Wandr",
     tint: "wandr",
     lite: "var(--wandr-lite)",
+    repo: "https://github.com/aryamanraj2/Wandr",
     tech: [
       "Swift",
       "SwiftUI",
@@ -42,6 +44,7 @@ const PROJECTS: Project[] = [
     title: "Saldo",
     tint: "saldo",
     lite: "var(--saldo-lite)",
+    repo: "https://github.com/aryamanraj2/Saldo",
     tech: [
       "Swift",
       "SwiftUI",
@@ -61,6 +64,7 @@ const PROJECTS: Project[] = [
     title: "AquaSense",
     tint: "aqua",
     lite: "var(--aqua-lite)",
+    repo: "https://github.com/aryamanraj2/Aqua_Sense",
     tech: [
       "Swift",
       "Vision",
@@ -81,6 +85,8 @@ const PROJECTS: Project[] = [
     ],
   },
 ];
+
+const TAP = "(pointer: coarse) and (min-width: 561px)";
 
 const MARQUEE_COPIES = [0, 1, 2, 3];
 const SECONDS_PER_ITEM = 5.3;
@@ -217,16 +223,26 @@ export default function Projects({
           }}
         >
           {PROJECTS.map((project, index) => (
-            <button
+            <a
               key={project.title}
-              type="button"
+              href={project.repo}
+              target="_blank"
+              rel="noreferrer noopener"
               className={`${styles.row} ${index === open ? styles.open : ""}`}
               style={{ "--lite": project.lite } as CSSProperties}
               aria-expanded={index === open}
               onMouseEnter={() => reach(index)}
               onFocus={() => reach(index)}
-              onClick={() => reach(index)}
+              onClick={(event) => {
+                if (index !== open && window.matchMedia(TAP).matches) {
+                  event.preventDefault();
+                }
+                reach(index);
+              }}
             >
+              <span className={styles.cue} aria-hidden="true">
+                Repo ↗
+              </span>
               <span className={styles.index}>
                 {(index + 1).toString().padStart(2, "0")}
               </span>
@@ -248,7 +264,7 @@ export default function Projects({
                   </span>
                 </span>
               </span>
-            </button>
+            </a>
           ))}
         </div>
       </div>

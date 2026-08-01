@@ -71,6 +71,7 @@
   color: var(--bone);
   font: inherit;
   text-align: left;
+  text-decoration: none;
   background: none;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 227, 0.16);
@@ -186,6 +187,30 @@
 .board.focused .row:not(.open) .head {
   opacity: 0.6;
   transition: opacity 320ms var(--ease-release);
+}
+
+.cue {
+  position: absolute;
+  top: calc(clamp(20px, 2.6vw, 30px) + 0.5em);
+  right: 0;
+  z-index: 1;
+  color: var(--lite, var(--bone));
+  font-size: clamp(0.56rem, 0.68vw, 0.64rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 240ms var(--ease-exit), transform 240ms var(--ease-exit);
+}
+
+.row.open .cue {
+  opacity: 0.62;
+  transform: none;
+  transition: opacity 380ms var(--ease-release) 80ms,
+    transform 420ms var(--ease-friction) 80ms;
 }
 
 .name {
@@ -422,6 +447,11 @@
   .row .index,
   .row .chip {
     color: var(--lite, var(--bone));
+  }
+
+  .row .cue {
+    opacity: 0.62;
+    transform: none;
   }
 
   .row .reveal {
