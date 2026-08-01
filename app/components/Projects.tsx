@@ -7,7 +7,6 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { ArrowUpRight } from "lucide-react";
 import styles from "./Projects.module.css";
 import Emphasis, { type Segment } from "./Emphasis";
 import { type TintKey } from "./Wash";
@@ -251,17 +250,6 @@ export default function Projects({
               </span>
             </button>
           ))}
-          <button
-            type="button"
-            className={styles.more}
-            onMouseEnter={() => reach(null)}
-            onFocus={() => reach(null)}
-          >
-            <span className={styles.moreLabel}>View more</span>
-            <span className={styles.moreIcon} aria-hidden="true">
-              <ArrowUpRight size={17} strokeWidth={1.8} />
-            </span>
-          </button>
         </div>
       </div>
     </section>

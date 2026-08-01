@@ -1,0 +1,306 @@
+.root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+  color: var(--bone);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
+}
+
+.root.enter {
+  opacity: 1;
+  transform: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 40px);
+  padding: clamp(14px, 1.8vw, 22px) clamp(18px, 3.4vw, 48px);
+  border-bottom: 1px solid color-mix(in srgb, var(--bone) 12%, transparent);
+}
+
+.back,
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  width: max-content;
+  color: var(--bone);
+  text-decoration: none;
+  font-size: clamp(0.86rem, 1.1vw, 1rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.back:focus-visible,
+.action:focus-visible {
+  outline: none;
+}
+
+.backLabel,
+.actionLabel {
+  position: relative;
+  opacity: 0.6;
+  transition: opacity 320ms var(--ease-exit);
+}
+
+.backLabel::after,
+.actionLabel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-exit);
+}
+
+.back:hover .backLabel,
+.back:focus-visible .backLabel,
+.action:hover .actionLabel,
+.action:focus-visible .actionLabel {
+  opacity: 1;
+}
+
+.back:hover .backLabel::after,
+.back:focus-visible .backLabel::after,
+.action:hover .actionLabel::after,
+.action:focus-visible .actionLabel::after {
+  transform: none;
+  transform-origin: left;
+  transition: transform 460ms var(--ease-friction);
+}
+
+.backIcon,
+.arrow {
+  display: inline-flex;
+  opacity: 0.4;
+  transition: opacity 320ms var(--ease-exit), transform 380ms var(--ease-exit);
+}
+
+.backIcon {
+  transform: translateX(3px);
+}
+
+.arrow {
+  transform: translate(-3px, 3px);
+}
+
+.back:hover .backIcon,
+.back:focus-visible .backIcon {
+  opacity: 1;
+  transform: none;
+}
+
+.action:hover .arrow,
+.action:focus-visible .arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(0.86rem, 1.1vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.34;
+}
+
+.count {
+  opacity: 0.7;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: clamp(12px, 2.2vw, 32px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.stage::-webkit-scrollbar {
+  display: none;
+}
+
+.doc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-items: safe center;
+  justify-content: center;
+  justify-content: safe center;
+  gap: clamp(12px, 2vw, 24px);
+  min-height: 100%;
+  min-width: 100%;
+  width: fit-content;
+  opacity: 0;
+  transition: opacity 620ms var(--ease-soft);
+}
+
+.doc.visible {
+  opacity: 1;
+}
+
+.page {
+  position: relative;
+  flex: none;
+  width: calc(100% * var(--zoom, 1));
+  max-width: calc(
+    min(960px, calc(var(--stage-h, 78vh) * var(--ratio, 0.77))) *
+      var(--zoom, 1)
+  );
+  aspect-ratio: var(--ratio, 0.77);
+  border: 1px solid color-mix(in srgb, var(--bone) 12%, transparent);
+  background: color-mix(in srgb, var(--bone) 4%, transparent);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hotspot {
+  position: absolute;
+  display: block;
+  border-bottom: 1px solid transparent;
+  transition: border-color 240ms var(--ease-exit);
+}
+
+.hotspot:hover,
+.hotspot:focus-visible {
+  outline: none;
+  border-bottom-color: var(--neon);
+}
+
+.status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  opacity: 0.34;
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-exit);
+}
+
+.status.gone {
+  opacity: 0;
+}
+
+.island {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3.4vh, 34px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--bone) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 82%, var(--bone));
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity 520ms var(--ease-soft), transform 520ms var(--ease-soft);
+}
+
+.island.afloat {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--bone);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 240ms var(--ease-exit), background 240ms var(--ease-exit);
+}
+
+.control:hover:not(:disabled),
+.control:focus-visible:not(:disabled) {
+  outline: none;
+  opacity: 1;
+  background: color-mix(in srgb, var(--bone) 12%, transparent);
+}
+
+.control:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.readout {
+  min-width: 46px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  opacity: 0.6;
+  user-select: none;
+}
+
+.divider {
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: color-mix(in srgb, var(--bone) 16%, transparent);
+}
+
+.fallback {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vh, 28px);
+  padding: clamp(24px, 6vw, 48px);
+  text-align: center;
+}
+
+.fallbackText {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(0.98rem, 3.6vw, 1.12rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  opacity: 0.52;
+}
+
+@media (max-width: 640px) {
+  .bar {
+    gap: 12px;
+  }
+
+  .title {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+}
