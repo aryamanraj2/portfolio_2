@@ -28,11 +28,14 @@ const TRACK_COUNT = 5;
 const ARTIST_COUNT = 3;
 const FETCH_LIMIT = 10;
 const SEARCH_DEPTH = 25;
+const CATALOG_DEPTH = 200;
+const SINGLE_MAX = 2;
 const TIMEOUT_MS = 5000;
 const ENRICH_CONCURRENCY = 3;
 
 const ENDPOINT = "https://ws.audioscrobbler.com/2.0/";
 const ITUNES = "https://itunes.apple.com/search";
+const LOOKUP = "https://itunes.apple.com/lookup";
 
 const FEATURE = /\s*[([]\s*(?:feat|ft|featuring|with)\b\.?\s+[^)\]]*[)\]]\s*$/i;
 
@@ -137,16 +140,22 @@ async function read(url: string, label: string): Promise<unknown> {
   }
 }
 
-function lastfm(method: string, key: string, user: string): string {
+function lastfm(method: string, key: string, extra: Record<string, string>) {
   const params = new URLSearchParams({
     method,
-    user,
     api_key: key,
-    period: "1month",
-    limit: String(FETCH_LIMIT),
     format: "json",
+    ...extra,
   });
   return `${ENDPOINT}?${params.toString()}`;
+}
+
+function chart(method: string, key: string, user: string): string {
+  return lastfm(method, key, {
+    user,
+    period: "1month",
+    limit: String(FETCH_LIMIT),
+  });
 }
 
 type Raw = { title: string; artist: string; plays: number; link: string | null };
@@ -233,14 +242,22 @@ const fold = (value: string): string =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "");
 
+const tight = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
 const cache = new Map<string, Record<string, unknown> | null>();
 
 async function search(
   params: Record<string, string>,
+  depth: number = SEARCH_DEPTH,
 ): Promise<Record<string, unknown>[]> {
   const query = new URLSearchParams({
     ...params,
-    limit: String(SEARCH_DEPTH),
+    limit: String(depth),
     media: "music",
   });
   const payload = await read(`${ITUNES}?${query.toString()}`, "itunes");
@@ -263,12 +280,12 @@ async function matchTrack(
 
   const rows = await search({ term: `${artist} ${title}`, entity: "song" });
   const wantTitle = fold(title);
-  const wantArtist = fold(artist);
+  const wantArtist = tight(artist);
 
   const match =
     rows.find((row) => {
       const gotTitle = fold(text(row.trackName));
-      const gotArtist = fold(text(row.artistName));
+      const gotArtist = tight(text(row.artistName));
       if (!gotTitle || !gotArtist || gotTitle !== wantTitle) return false;
       return gotArtist.includes(wantArtist) || wantArtist.includes(gotArtist);
     }) ?? null;
@@ -277,24 +294,94 @@ async function matchTrack(
   return match;
 }
 
-async function matchArtist(
-  name: string,
-): Promise<Record<string, unknown> | null> {
-  const key = `artist ${fold(name)}`;
-  const hit = cache.get(key);
-  if (hit !== undefined) return hit;
+async function albumOf(
+  key: string,
+  artist: string,
+  title: string,
+): Promise<string | null> {
+  const payload = await read(
+    lastfm("track.getInfo", key, { artist, track: title }),
+    "track.getInfo",
+  );
+  if (!payload || typeof payload !== "object") return null;
+  const body = payload as Record<string, unknown>;
+  if (body.error) return null;
+  const track = body.track;
+  if (!track || typeof track !== "object") return null;
+  const album = (track as Record<string, unknown>).album;
+  if (!album || typeof album !== "object") return null;
+  return text((album as Record<string, unknown>).title) || null;
+}
 
-  const rows = await search({
-    term: name,
-    entity: "album",
-    attribute: "artistTerm",
-  });
-  const want = fold(name);
+type Catalog = {
+  link: string | null;
+  albums: Record<string, unknown>[];
+};
 
-  const match = rows.find((row) => fold(text(row.artistName)) === want) ?? null;
+const catalogs = new Map<string, Promise<Catalog | null>>();
 
-  cache.set(key, match);
-  return match;
+function artistCatalog(name: string): Promise<Catalog | null> {
+  const key = tight(name);
+  const hit = catalogs.get(key);
+  if (hit) return hit;
+
+  const job = (async (): Promise<Catalog | null> => {
+    const found = await search({ term: name, entity: "musicArtist" }, 10);
+    const artist = found.find((row) => tight(text(row.artistName)) === key);
+    if (!artist) return null;
+
+    const id = count(artist.artistId);
+    if (!id) return null;
+
+    const payload = await read(
+      `${LOOKUP}?id=${id}&entity=album&limit=${CATALOG_DEPTH}`,
+      "itunes lookup",
+    );
+    const rows =
+      payload && typeof payload === "object"
+        ? (payload as Record<string, unknown>).results
+        : null;
+
+    const albums = Array.isArray(rows)
+      ? rows.filter(
+          (row): row is Record<string, unknown> =>
+            Boolean(row) &&
+            typeof row === "object" &&
+            text((row as Record<string, unknown>).wrapperType) === "collection",
+        )
+      : [];
+
+    return { link: text(artist.artistLinkUrl) || null, albums };
+  })();
+
+  catalogs.set(key, job);
+  return job;
+}
+
+const newest = (rows: Record<string, unknown>[]) =>
+  [...rows].sort(
+    (a, b) => Date.parse(text(b.releaseDate)) - Date.parse(text(a.releaseDate)),
+  )[0] ?? null;
+
+function coverOf(catalog: Catalog): Record<string, unknown> | null {
+  const albums = catalog.albums.filter(
+    (row) => count(row.trackCount) > SINGLE_MAX,
+  );
+  return newest(albums.length > 0 ? albums : catalog.albums);
+}
+
+function albumIn(
+  catalog: Catalog,
+  album: string,
+): Record<string, unknown> | null {
+  const want = fold(album);
+  if (!want) return null;
+  return (
+    catalog.albums.find((row) => {
+      const got = fold(text(row.collectionName));
+      return Boolean(got) && (got.includes(want) || want.includes(got));
+    }) ?? null
+  );
 }
 
 async function pool<T, R>(
@@ -319,7 +406,7 @@ async function pool<T, R>(
   return out;
 }
 
-async function enrichTracks(rows: Raw[]): Promise<Track[]> {
+async function enrichTracks(rows: Raw[], key: string): Promise<Track[]> {
   return pool(rows, async (row, i) => {
     const base: Track = {
       rank: i + 1,
@@ -333,15 +420,30 @@ async function enrichTracks(rows: Raw[]): Promise<Track[]> {
     };
 
     const match = await matchTrack(row.artist, row.title);
-    if (!match) return base;
+    if (match) {
+      const art = text(match.artworkUrl100);
+      return {
+        ...base,
+        album: text(match.collectionName) || null,
+        art: art ? upscale(art) : null,
+        preview: text(match.previewUrl) || null,
+        link: text(match.trackViewUrl) || base.link,
+      };
+    }
 
-    const art = text(match.artworkUrl100);
+    const album = await albumOf(key, row.artist, row.title);
+    if (!album) return base;
+
+    const catalog = await artistCatalog(row.artist);
+    const cover = catalog ? albumIn(catalog, album) : null;
+    if (!cover) return { ...base, album };
+
+    const art = text(cover.artworkUrl100);
     return {
       ...base,
-      album: text(match.collectionName) || null,
+      album: text(cover.collectionName) || album,
       art: art ? upscale(art) : null,
-      preview: text(match.previewUrl) || null,
-      link: text(match.trackViewUrl) || base.link,
+      link: text(cover.collectionViewUrl) || base.link,
     };
   });
 }
@@ -356,14 +458,15 @@ async function enrichArtists(rows: Raw[]): Promise<Artist[]> {
       link: row.link,
     };
 
-    const match = await matchArtist(row.title);
-    if (!match) return base;
+    const catalog = await artistCatalog(row.title);
+    if (!catalog) return base;
 
-    const art = text(match.artworkUrl100);
+    const cover = coverOf(catalog);
+    const art = cover ? text(cover.artworkUrl100) : "";
     return {
       ...base,
       art: art ? upscale(art) : null,
-      link: text(match.artistViewUrl) || base.link,
+      link: catalog.link || base.link,
     };
   });
 }
@@ -378,8 +481,8 @@ export async function getRotation(): Promise<Rotation> {
   }
 
   const [trackPayload, artistPayload] = await Promise.all([
-    read(lastfm("user.getTopTracks", key, user), "getTopTracks"),
-    read(lastfm("user.getTopArtists", key, user), "getTopArtists"),
+    read(chart("user.getTopTracks", key, user), "getTopTracks"),
+    read(chart("user.getTopArtists", key, user), "getTopArtists"),
   ]);
 
   const rawTracks = merge(parseTracks(trackPayload)).slice(0, TRACK_COUNT);
@@ -388,7 +491,7 @@ export async function getRotation(): Promise<Rotation> {
   if (rawTracks.length === 0 && rawArtists.length === 0) return FALLBACK;
 
   const [tracks, artists] = await Promise.all([
-    enrichTracks(rawTracks),
+    enrichTracks(rawTracks, key),
     enrichArtists(rawArtists),
   ]);
 
