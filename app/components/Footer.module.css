@@ -1,0 +1,585 @@
+.panel {
+  --edge: color-mix(in srgb, var(--bone) 16%, transparent);
+  --faint: color-mix(in srgb, var(--bone) 10%, transparent);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.6vh, 34px);
+  margin-top: clamp(44px, 10vh, 132px);
+  margin-inline: calc(-1 * clamp(24px, 5vw, 64px));
+  margin-bottom: calc(-1 * clamp(48px, 9vh, 96px));
+  padding-inline: clamp(24px, 5vw, 64px);
+  padding-bottom: clamp(14px, 2vh, 26px);
+  color: var(--soft);
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(7px);
+  transition: opacity 820ms var(--ease-soft), transform 820ms var(--ease-soft),
+    filter 820ms var(--ease-soft), color 760ms var(--ease-soft);
+}
+
+:global(html[data-tint="wandr"]) .panel {
+  --edge: color-mix(in srgb, var(--wandr-lite) 24%, transparent);
+  --faint: color-mix(in srgb, var(--wandr-lite) 15%, transparent);
+}
+
+:global(html[data-tint="saldo"]) .panel {
+  --edge: color-mix(in srgb, var(--saldo-lite) 24%, transparent);
+  --faint: color-mix(in srgb, var(--saldo-lite) 15%, transparent);
+}
+
+:global(html[data-tint="aqua"]) .panel {
+  --edge: color-mix(in srgb, var(--aqua-lite) 24%, transparent);
+  --faint: color-mix(in srgb, var(--aqua-lite) 15%, transparent);
+}
+
+.panel.active {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition-delay: 120ms;
+}
+
+.stencil {
+  color: var(--soft);
+  font-size: clamp(0.54rem, 0.66vw, 0.62rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.3;
+  transition: color 760ms var(--ease-soft);
+}
+
+.serial {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 28px);
+}
+
+.ruleDash,
+.ruleDot {
+  display: block;
+  width: 100%;
+  height: 1px;
+  color: var(--soft);
+  transition: color 760ms var(--ease-soft);
+}
+
+.ruleDash {
+  background: repeating-linear-gradient(
+    to right,
+    currentColor 0 3px,
+    transparent 3px 9px
+  );
+  opacity: 0.18;
+}
+
+.ruleDot {
+  background: repeating-linear-gradient(
+    to right,
+    currentColor 0 1px,
+    transparent 1px 6px
+  );
+  opacity: 0.16;
+}
+
+.deck {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr);
+  gap: clamp(30px, 5vw, 88px);
+  padding-block: clamp(10px, 2vh, 26px);
+}
+
+.io {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 22px);
+  min-width: 0;
+}
+
+.kicker {
+  color: var(--soft);
+  font-size: clamp(0.7rem, 0.84vw, 0.78rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.34;
+  transition: color 760ms var(--ease-soft);
+}
+
+.mail {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--soft);
+  text-decoration: none;
+  transition: color 760ms var(--ease-soft);
+}
+
+.mailLabel {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.32rem, 3.4vw, 2.7rem);
+  line-height: 1.05;
+  font-variation-settings: "wght" 860;
+  letter-spacing: -0.028em;
+  word-break: break-all;
+  opacity: 0.72;
+  transition: opacity 320ms var(--ease-exit);
+}
+
+.mailLabel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-exit);
+}
+
+.mail:hover .mailLabel,
+.mail:focus-visible .mailLabel {
+  opacity: 1;
+}
+
+.mail:hover .mailLabel::after,
+.mail:focus-visible .mailLabel::after {
+  transform: none;
+  transform-origin: left;
+  transition: transform 460ms var(--ease-friction);
+}
+
+.mail:focus-visible {
+  outline: none;
+}
+
+.ports {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(9px, 1.1vw, 13px);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-top: clamp(6px, 1vw, 14px);
+  list-style: none;
+}
+
+.port {
+  display: flex;
+  min-width: 0;
+}
+
+.jack {
+  display: grid;
+  grid-template-columns: auto auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.3vw, 17px);
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+  color: var(--soft);
+  text-decoration: none;
+  transition: color 760ms var(--ease-soft);
+}
+
+.jack:focus-visible {
+  outline: 1px solid var(--edge);
+  outline-offset: 7px;
+}
+
+.rank {
+  font-size: clamp(0.72rem, 0.88vw, 0.84rem);
+  line-height: 1;
+  font-variation-settings: "wght" 820;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  opacity: 0.17;
+  transition: opacity 340ms var(--ease-exit);
+}
+
+.jack:hover .rank,
+.jack:focus-visible .rank {
+  opacity: 0.52;
+}
+
+.pip {
+  flex: 0 0 auto;
+  width: 0.46em;
+  height: 0.46em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0.34;
+  transform: scale(1);
+  transition: background 320ms var(--ease-exit), opacity 320ms var(--ease-exit),
+    transform 320ms var(--ease-exit);
+}
+
+.jack:hover .pip,
+.jack:focus-visible .pip {
+  background: currentColor;
+  opacity: 1;
+  transform: scale(1.1);
+  transition: background 300ms var(--ease-release),
+    opacity 300ms var(--ease-release), transform 520ms var(--ease-friction);
+}
+
+.portLabel {
+  display: inline-block;
+  min-width: 9.8ch;
+  font-size: clamp(0.6rem, 0.74vw, 0.7rem);
+  line-height: 1;
+  font-variation-settings: "wght" 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.74;
+  transform: translateX(0);
+  transition: opacity 320ms var(--ease-exit),
+    font-variation-settings 320ms var(--ease-exit),
+    transform 320ms var(--ease-exit);
+}
+
+.jack:hover .portLabel,
+.jack:focus-visible .portLabel {
+  opacity: 1;
+  font-variation-settings: "wght" 840;
+  transform: translateX(0.14em);
+  transition: font-variation-settings 420ms var(--ease-friction),
+    transform 520ms var(--ease-friction), opacity 300ms var(--ease-release);
+}
+
+.handle {
+  overflow: hidden;
+  font-size: clamp(0.6rem, 0.72vw, 0.68rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.28;
+  transition: opacity 340ms var(--ease-exit);
+}
+
+.jack:hover .handle,
+.jack:focus-visible .handle {
+  opacity: 0.6;
+}
+
+.module {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(11px, 1.4vw, 17px);
+  min-width: 0;
+  padding: clamp(16px, 2vw, 26px) clamp(15px, 1.9vw, 24px);
+}
+
+.corner {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  color: var(--soft);
+  opacity: 0.3;
+  transition: color 760ms var(--ease-soft);
+}
+
+.tl {
+  top: 0;
+  left: 0;
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+
+.modHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(12px, 1.6vw, 22px);
+  width: 100%;
+}
+
+.time {
+  color: var(--soft);
+  font-size: clamp(1.9rem, 3.7vw, 3.1rem);
+  line-height: 0.86;
+  font-variation-settings: "wght" 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.045em;
+  transition: color 760ms var(--ease-soft);
+}
+
+.place {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(9px, 1.2vw, 15px);
+  flex-wrap: wrap;
+}
+
+.city {
+  color: var(--soft);
+  font-size: clamp(0.62rem, 0.76vw, 0.72rem);
+  line-height: 1;
+  font-variation-settings: "wght" 840;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  transition: color 760ms var(--ease-soft);
+}
+
+.coords {
+  color: var(--soft);
+  font-size: clamp(0.56rem, 0.68vw, 0.64rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.28;
+  transition: color 760ms var(--ease-soft);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.8vw, 9px);
+  width: 100%;
+  color: var(--soft);
+  transition: color 760ms var(--ease-soft);
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 2px;
+  width: 100%;
+  height: clamp(13px, 1.5vw, 18px);
+}
+
+.cell {
+  background: currentColor;
+  opacity: 0.13;
+  transition: opacity 420ms var(--ease-soft), background 420ms var(--ease-soft);
+}
+
+.cell[data-state="up"] {
+  opacity: 0.58;
+}
+
+.cell[data-state="now"] {
+  background: var(--neon);
+  opacity: 1;
+}
+
+.ticks {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+}
+
+.tickLabel {
+  grid-column: calc(var(--t) + 1);
+  font-size: clamp(0.48rem, 0.58vw, 0.55rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0.24;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.62em;
+  margin-top: clamp(2px, 0.6vw, 6px);
+}
+
+.led {
+  flex: 0 0 auto;
+  width: 0.52em;
+  height: 0.52em;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--soft) 24%, transparent);
+  transition: background 520ms var(--ease-soft);
+}
+
+.led[data-up="true"] {
+  background: var(--neon);
+  animation: ledBlink 3.2s steps(1) infinite;
+}
+
+@keyframes ledBlink {
+  0%,
+  93% {
+    opacity: 1;
+  }
+  94%,
+  100% {
+    opacity: 0.34;
+  }
+}
+
+.statusLabel {
+  color: var(--soft);
+  font-size: clamp(0.62rem, 0.76vw, 0.72rem);
+  line-height: 1;
+  font-variation-settings: "wght" 840;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.82;
+  transition: color 760ms var(--ease-soft);
+}
+
+.grill {
+  display: block;
+  width: 100%;
+  height: clamp(42px, 6.4vw, 84px);
+  color: var(--soft);
+  background-image: radial-gradient(
+    circle at center,
+    currentColor 1px,
+    transparent 1.1px
+  );
+  background-size: 7px 7px;
+  opacity: 0.16;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 26%,
+    #000 74%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 26%,
+    #000 74%,
+    transparent 100%
+  );
+  transition: color 760ms var(--ease-soft);
+}
+
+.baseline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 28px);
+}
+
+.markWrap {
+  overflow: hidden;
+  width: 100%;
+  margin-top: clamp(6px, 1.4vh, 16px);
+}
+
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wordmark text {
+  fill: color-mix(in srgb, var(--soft) 14%, transparent);
+  font-family: inherit;
+  font-size: 120px;
+  font-variation-settings: "wght" 900;
+  transition: fill 760ms var(--ease-soft);
+}
+
+@media (max-width: 900px) {
+  .deck {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 6vw, 44px);
+  }
+
+  .module {
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .serial,
+  .baseline {
+    gap: clamp(8px, 3vw, 16px);
+  }
+
+  .mailLabel {
+    font-size: clamp(1.06rem, 6.4vw, 1.6rem);
+  }
+
+  .portLabel {
+    min-width: 0;
+  }
+
+  .handle {
+    display: none;
+  }
+
+  .time {
+    font-size: clamp(1.7rem, 10vw, 2.4rem);
+  }
+
+  .wordmark {
+    letter-spacing: -0.03em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel.active {
+    transition: opacity 200ms linear;
+    transform: none;
+    filter: none;
+    transition-delay: 0ms;
+  }
+
+  .mailLabel,
+  .mailLabel::after,
+  .rank,
+  .pip,
+  .portLabel,
+  .handle,
+  .cell,
+  .led {
+    transition: none;
+  }
+
+  .jack:hover .portLabel,
+  .jack:focus-visible .portLabel,
+  .jack:hover .pip,
+  .jack:focus-visible .pip {
+    transform: none;
+  }
+
+  .led[data-up="true"] {
+    animation: none;
+  }
+}

@@ -8,6 +8,7 @@ import Emphasis, { type Segment } from "./Emphasis";
 import Lore from "./Lore";
 import Projects from "./Projects";
 import SideQuests from "./SideQuests";
+import Footer from "./Footer";
 import Stamp from "./Stamp";
 import Wash, { type TintKey, type WashHandle } from "./Wash";
 import type { Rotation } from "@/app/lib/music";
@@ -212,6 +213,7 @@ export default function Landing({ rotation }: { rotation: Rotation }) {
         <Lore active={phase === "inflate"} />
         <Projects active={phase === "inflate"} onTint={tint} />
         <SideQuests active={phase === "inflate"} rotation={rotation} />
+        <Footer active={phase === "inflate"} />
       </div>
     </div>
   );
