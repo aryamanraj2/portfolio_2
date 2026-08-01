@@ -64,7 +64,7 @@ const PROJECTS: Project[] = [
     title: "AquaSense",
     tint: "aqua",
     lite: "var(--aqua-lite)",
-    repo: "https://github.com/aryamanraj2/Aqua_Sense",
+    repo: "https://devfolio.co/projects/aquacult-5794",
     tech: [
       "Swift",
       "Vision",

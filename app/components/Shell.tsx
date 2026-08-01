@@ -11,7 +11,7 @@ export default function Shell({ rotation }: { rotation: Rotation }) {
   return (
     <>
       {!loaded && <Loader onDone={() => setLoaded(true)} />}
-      {loaded && <Landing rotation={rotation} />}
+      <Landing rotation={rotation} start={loaded} />
     </>
   );
 }

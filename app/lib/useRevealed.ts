@@ -15,17 +15,33 @@ export function useRevealed<T extends HTMLElement>(threshold = 0.4) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setRevealed(true);
-        observer.disconnect();
-      },
-      { threshold }
-    );
+    let observer: IntersectionObserver | null = null;
+    let frame = 0;
 
-    observer.observe(node);
-    return () => observer.disconnect();
+    const watch = () => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          setRevealed(true);
+          observer?.disconnect();
+        },
+        { threshold, rootMargin: "0px 0px -18% 0px" }
+      );
+      observer.observe(node);
+    };
+
+    const start = () => {
+      window.removeEventListener("scroll", start, true);
+      frame = requestAnimationFrame(watch);
+    };
+
+    window.addEventListener("scroll", start, { capture: true, passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", start, true);
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
   }, []);
 
   return [ref, revealed] as const;

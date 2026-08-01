@@ -45,7 +45,13 @@ type Phase = "terminal" | "morph" | "name" | "inflate";
 const settled = (text: string): Cell[] =>
   text.split("").map((char) => ({ char, scrambling: false }));
 
-export default function Landing({ rotation }: { rotation: Rotation }) {
+export default function Landing({
+  rotation,
+  start = true,
+}: {
+  rotation: Rotation;
+  start?: boolean;
+}) {
   const [cells, setCells] = useState<Cell[]>([]);
   const [phase, setPhase] = useState<Phase>("terminal");
   const [enter, setEnter] = useState(false);
@@ -71,6 +77,8 @@ export default function Landing({ rotation }: { rotation: Rotation }) {
   }, []);
 
   useEffect(() => {
+    if (!start) return;
+
     let cancelled = false;
     let raf = 0;
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -164,7 +172,7 @@ export default function Landing({ rotation }: { rotation: Rotation }) {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
     };
-  }, []);
+  }, [start]);
 
   return (
     <div
@@ -172,10 +180,11 @@ export default function Landing({ rotation }: { rotation: Rotation }) {
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
       <Wash ref={wash} />
-      <Stamp active={phase === "inflate"} />
+      {start && <Stamp active={phase === "inflate"} />}
       <div className={styles.screen}>
         <div className={styles.hero}>
           <h1 className={styles.line} aria-label={TARGET}>
+            <span className={styles.srOnly}>{TARGET}</span>
             <span className={styles.text} aria-hidden="true">
               {cells.map((cell, i) => (
                 <span

@@ -236,12 +236,12 @@ export default function Viewer({
   return (
     <div className={`${styles.root} ${enter ? styles.enter : ""}`}>
       <header className={styles.bar}>
-        <p className={styles.title}>
+        <h1 className={styles.title}>
           résumé
           {sheets.length > 1 ? (
             <span className={styles.count}> · {sheets.length} pages</span>
           ) : null}
-        </p>
+        </h1>
         <a className={styles.action} href={file} download={downloadAs}>
           <span className={styles.actionLabel}>download</span>
           <span className={styles.arrow}>
