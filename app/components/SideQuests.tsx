@@ -68,11 +68,17 @@ const lit = (on: number, steps: number): string => `${(on / steps) * 100}%`;
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep",
   "oct", "nov", "dec"];
 
-const stamp = (iso: string): string => {
+const when = (iso: string): string => {
   if (!iso) return "sample rotation";
   const at = new Date(iso);
   if (Number.isNaN(at.getTime())) return "sample rotation";
   return `updated ${at.getUTCDate()} ${MONTHS[at.getUTCMonth()]}`;
+};
+
+const stamp = (rotation: Rotation): string => {
+  const mark = when(rotation.updated);
+  if (rotation.minutes <= 0) return mark;
+  return `${rotation.minutes.toLocaleString("en-US")} min listened · ${mark}`;
 };
 
 const GLYPHS =
@@ -519,7 +525,7 @@ export default function SideQuests({
 
               <span className={styles.status}>
                 <span className={styles.caret} aria-hidden="true" />
-                {item.id === "music" ? stamp(rotation.updated) : item.status}
+                {item.id === "music" ? stamp(rotation) : item.status}
               </span>
             </div>
           ))}

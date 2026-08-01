@@ -20,6 +20,7 @@ export type Artist = {
 export type Rotation = {
   period: string;
   updated: string;
+  minutes: number;
   tracks: Track[];
   artists: Artist[];
 };
@@ -27,6 +28,7 @@ export type Rotation = {
 const TRACK_COUNT = 5;
 const ARTIST_COUNT = 3;
 const FETCH_LIMIT = 10;
+const MINUTES_DEPTH = 1000;
 const SEARCH_DEPTH = 25;
 const CATALOG_DEPTH = 200;
 const SINGLE_MAX = 2;
@@ -42,6 +44,7 @@ const FEATURE = /\s*[([]\s*(?:feat|ft|featuring|with)\b\.?\s+[^)\]]*[)\]]\s*$/i;
 export const FALLBACK: Rotation = {
   period: "Last 30 days",
   updated: "",
+  minutes: 0,
   tracks: [
     {
       rank: 1,
@@ -150,11 +153,16 @@ function lastfm(method: string, key: string, extra: Record<string, string>) {
   return `${ENDPOINT}?${params.toString()}`;
 }
 
-function chart(method: string, key: string, user: string): string {
+function chart(
+  method: string,
+  key: string,
+  user: string,
+  limit: number = FETCH_LIMIT,
+): string {
   return lastfm(method, key, {
     user,
     period: "1month",
-    limit: String(FETCH_LIMIT),
+    limit: String(limit),
   });
 }
 
@@ -217,6 +225,41 @@ function parseArtists(payload: unknown): Raw[] {
       },
     ];
   });
+}
+
+function parseMinutes(payload: unknown): number {
+  if (!payload || typeof payload !== "object") return 0;
+  const body = payload as Record<string, unknown>;
+  if (body.error) {
+    console.warn("music: minutes chart returned an error body");
+    return 0;
+  }
+  const root = body.toptracks;
+  if (!root || typeof root !== "object") return 0;
+  const rows = list<Record<string, unknown>>(
+    (root as Record<string, unknown>).track,
+  );
+
+  let seconds = 0;
+  let timed = 0;
+  let sample = 0;
+  let blind = 0;
+
+  for (const row of rows) {
+    const plays = count(row.playcount);
+    const length = count(row.duration);
+    if (length > 0) {
+      seconds += length * plays;
+      sample += length;
+      timed += 1;
+      continue;
+    }
+    blind += plays;
+  }
+
+  if (timed > 0 && blind > 0) seconds += (sample / timed) * blind;
+
+  return Math.round(seconds / 60);
 }
 
 function merge(rows: Raw[]): Raw[] {
@@ -480,9 +523,13 @@ export async function getRotation(): Promise<Rotation> {
     return FALLBACK;
   }
 
-  const [trackPayload, artistPayload] = await Promise.all([
+  const [trackPayload, artistPayload, spanPayload] = await Promise.all([
     read(chart("user.getTopTracks", key, user), "getTopTracks"),
     read(chart("user.getTopArtists", key, user), "getTopArtists"),
+    read(
+      chart("user.getTopTracks", key, user, MINUTES_DEPTH),
+      "getTopTracks span",
+    ),
   ]);
 
   const rawTracks = merge(parseTracks(trackPayload)).slice(0, TRACK_COUNT);
@@ -498,6 +545,7 @@ export async function getRotation(): Promise<Rotation> {
   return {
     period: "Last 30 days",
     updated: new Date().toISOString(),
+    minutes: parseMinutes(spanPayload),
     tracks,
     artists,
   };
