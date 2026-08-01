@@ -183,7 +183,12 @@ export default function Landing() {
         </div>
         <div className={styles.footer}>
           <div className={styles.cta}>
-            <a className={styles.action} href="/resume.pdf" download>
+            <a
+              className={styles.action}
+              href="/resume"
+              target="_blank"
+              rel="noreferrer"
+            >
               <span className={styles.actionLabel}>résumé</span>
               <span className={styles.arrow}>
                 <ArrowUpRight size={17} strokeWidth={1.8} />
