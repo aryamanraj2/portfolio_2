@@ -11,6 +11,7 @@ export const PITCH =
   "I write native apps for iOS and Android, the AI pipelines that run inside them, and the backends behind them.";
 
 export const EMAIL = "aryamanj250@gmail.com";
+export const PHONE = "+919136816530";
 export const TWITTER_HANDLE = "@aryamaaaann";
 
 export const SOCIALS = [
@@ -125,6 +126,7 @@ const person = {
   mainEntityOfPage: { "@id": PROFILE_ID },
   image: { "@id": IMAGE_ID },
   email: `mailto:${EMAIL}`,
+  telephone: PHONE,
   jobTitle: HEADLINE,
   description: DESCRIPTION,
   sameAs: SOCIALS,
