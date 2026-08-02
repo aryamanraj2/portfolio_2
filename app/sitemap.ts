@@ -28,5 +28,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${SITE_URL}/resume.pdf`,
+      lastModified: resume,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 }

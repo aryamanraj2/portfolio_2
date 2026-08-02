@@ -131,7 +131,7 @@ function Footer({ active = true }: { active?: boolean }) {
                   className={styles.jack}
                   href={port.href}
                   target={port.out ? "_blank" : undefined}
-                  rel={port.out ? "noreferrer" : undefined}
+                  rel={port.out ? "me noreferrer" : "me"}
                 >
                   <span className={styles.rank}>
                     {String(i + 1).padStart(2, "0")}

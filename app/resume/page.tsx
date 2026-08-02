@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import Viewer from "./Viewer";
-import { NAME } from "@/app/lib/site";
+import { NAME, resumeJsonLd } from "@/app/lib/site";
 
 const SUMMARY = `Résumé of ${NAME} — iOS and Android developer. Roles, projects, awards and contact details, viewable in the browser or downloadable as a PDF.`;
 
@@ -23,6 +23,16 @@ export const metadata: Metadata = {
     title: `Résumé — ${NAME}`,
     description: SUMMARY,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 const FILE = "/resume.pdf";
@@ -41,9 +51,17 @@ export default function ResumePage() {
   const version = stamp();
 
   return (
-    <Viewer
-      file={version ? `${FILE}?v=${version}` : FILE}
-      downloadAs={DOWNLOAD_AS}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(resumeJsonLd(SUMMARY)),
+        }}
+      />
+      <Viewer
+        file={version ? `${FILE}?v=${version}` : FILE}
+        downloadAs={DOWNLOAD_AS}
+      />
+    </>
   );
 }

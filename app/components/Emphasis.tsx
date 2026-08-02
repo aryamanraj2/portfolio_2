@@ -130,9 +130,11 @@ export default function Emphasis({
         </span>
       ) : (
         <span key={key} className="kw">
+          <span className="kwText">{item.chars.join("")}</span>
           {item.chars.map((char, j) => (
             <span
               key={j}
+              aria-hidden="true"
               className="kwChar"
               data-c={char}
               style={{ "--b": item.base, "--i": item.base + j } as CSSProperties}
