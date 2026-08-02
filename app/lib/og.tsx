@@ -8,8 +8,6 @@ const INK = "#000000";
 const BONE = "#fffff0";
 const NEON = "#edff00";
 
-const STACK = "Swift · SwiftUI · Kotlin · on-device AI";
-
 const FONT_CSS =
   "https://api.fontshare.com/v2/css?f[]=satoshi@500,900&display=swap";
 
@@ -110,9 +108,6 @@ export async function ogCard(sub: string) {
         >
           <div style={{ display: "flex", fontWeight: 900 }}>
             {SITE_URL.replace("https://", "")}
-          </div>
-          <div style={{ display: "flex", fontWeight: 500, opacity: 0.46 }}>
-            {STACK}
           </div>
         </div>
       </div>
