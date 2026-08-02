@@ -755,6 +755,40 @@
   }
 }
 
+@media (hover: none) {
+  .quests {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 110vh;
+    filter: none;
+    transition: opacity 620ms var(--ease-soft), transform 620ms var(--ease-soft);
+  }
+
+  .panel {
+    filter: none;
+    transition: opacity 300ms var(--ease-exit), transform 300ms var(--ease-exit);
+  }
+
+  .panel:not(.on) {
+    display: none;
+  }
+
+  .panel.on {
+    filter: none;
+    transition: opacity 520ms var(--ease-release) 180ms,
+      transform 640ms var(--ease-friction) 180ms;
+  }
+}
+
+@media (max-width: 560px) {
+  .stage {
+    min-height: 0;
+  }
+
+  .panel {
+    justify-content: flex-start;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .quests,
   .panel,

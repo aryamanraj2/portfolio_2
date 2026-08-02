@@ -39,6 +39,7 @@ export default function Stamp({ active }: { active: boolean }) {
 
     const letters = Array.from(ink.children).filter((el) => el !== emblem);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const soft = window.matchMedia("(pointer: coarse)").matches;
 
     const ctx = gsap.context(() => {
       gsap.set(svg, { opacity: 0, rotate: -9, scale: 1 });
@@ -61,12 +62,17 @@ export default function Stamp({ active }: { active: boolean }) {
 
       tl.fromTo(
         svg,
-        { opacity: 0, scale: 1.14, rotate: -1.5, filter: "blur(16px)" },
+        {
+          opacity: 0,
+          scale: 1.14,
+          rotate: -1.5,
+          ...(soft ? {} : { filter: "blur(16px)" }),
+        },
         {
           opacity: 1,
           scale: 1,
           rotate: -9,
-          filter: "blur(0px)",
+          ...(soft ? {} : { filter: "blur(0px)" }),
           duration: 1.5,
           ease: "power3.out",
         },

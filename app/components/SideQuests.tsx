@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  memo,
   useEffect,
   useRef,
   useState,
@@ -85,6 +86,7 @@ const GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!<>-_/\\[]{}=+*^?#";
 
 const MORPH_MS = 1080;
+const CHURN_MS = 45;
 const SLAM = "M0,0 C0.12,0.82 0.18,1 1,1";
 
 type Cell = { char: string; scrambling: boolean };
@@ -135,7 +137,7 @@ function Sleeve({ art, big = false }: { art: string | null; big?: boolean }) {
   );
 }
 
-export default function SideQuests({
+function SideQuests({
   active = true,
   rotation,
 }: {
@@ -177,9 +179,19 @@ export default function SideQuests({
       };
     });
 
+    const churn = window.matchMedia("(hover: none)").matches ? CHURN_MS : 0;
+
     const t0 = performance.now();
+    let drawn = 0;
 
     const tick = (now: number) => {
+      const done = now - t0 >= MORPH_MS;
+      if (!done && now - drawn < churn) {
+        raf.current = requestAnimationFrame(tick);
+        return;
+      }
+      drawn = now;
+
       const p = ease(Math.min((now - t0) / MORPH_MS, 1));
       const next = specs
         .map((spec) => {
@@ -534,3 +546,5 @@ export default function SideQuests({
     </section>
   );
 }
+
+export default memo(SideQuests);

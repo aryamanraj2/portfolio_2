@@ -24,6 +24,21 @@
   }
 }
 
+@media (hover: none) {
+  .stamp {
+    will-change: transform, opacity;
+  }
+}
+
+@media (max-width: 560px) {
+  .stamp {
+    position: static;
+    flex: 0 0 auto;
+    width: clamp(84px, 25vw, 120px);
+    margin: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stamp {
     will-change: auto;

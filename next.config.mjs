@@ -1,6 +1,6 @@
 const nextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ["10.147.161.29"],
+  allowedDevOrigins: ["10.147.161.29", "192.168.1.2"],
   turbopack: {
     root: process.cwd(),
   },

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
-import { useRevealed } from "@/app/lib/useRevealed";
+import { memo, useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./Footer.module.css";
 
 const SERIAL = "FTR–001";
@@ -51,6 +50,7 @@ const PORTS = [
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const TICKS = [0, 6, 12, 18];
+const ROOMY = "(min-width: 561px)";
 
 const awake = (hour: number) => hour >= WAKE || hour < SLEEP;
 
@@ -70,24 +70,45 @@ const read = () => {
   return { time: `${hh}:${pick("minute")}:${pick("second")}`, hour: Number(hh) % 24 };
 };
 
-export default function Footer({ active = true }: { active?: boolean }) {
-  const [ref, revealed] = useRevealed<HTMLElement>(0.15);
+function Footer({ active = true }: { active?: boolean }) {
+  const panel = useRef<HTMLElement>(null);
+  const [roomy, setRoomy] = useState(false);
+  const [near, setNear] = useState(false);
   const [clock, setClock] = useState<{ time: string; hour: number } | null>(null);
 
   useEffect(() => {
+    const query = window.matchMedia(ROOMY);
+    const sync = () => setRoomy(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const node = panel.current;
+    if (!node) return;
+    const io = new IntersectionObserver(
+      (entries) => setNear(entries.some((entry) => entry.isIntersecting)),
+      { rootMargin: "240px" },
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!roomy || !near) return;
     const tick = () => setClock(read());
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [roomy, near]);
 
   const up = clock ? awake(clock.hour) : false;
-  const on = active && revealed;
 
   return (
     <footer
-      ref={ref}
-      className={`${styles.panel} ${on ? styles.active : ""}`}
+      ref={panel}
+      className={`${styles.panel} ${active ? styles.active : ""}`}
     >
       <div className={styles.serial}>
         <span className={styles.stencil}>{SERIAL}</span>
@@ -124,62 +145,64 @@ export default function Footer({ active = true }: { active?: boolean }) {
           </ul>
         </div>
 
-        <div className={styles.module}>
-          <span className={`${styles.corner} ${styles.tl}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.tr}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.bl}`} aria-hidden="true" />
-          <span className={`${styles.corner} ${styles.br}`} aria-hidden="true" />
+        {roomy && (
+          <div className={styles.module}>
+            <span className={`${styles.corner} ${styles.tl}`} aria-hidden="true" />
+            <span className={`${styles.corner} ${styles.tr}`} aria-hidden="true" />
+            <span className={`${styles.corner} ${styles.bl}`} aria-hidden="true" />
+            <span className={`${styles.corner} ${styles.br}`} aria-hidden="true" />
 
-          <div className={styles.modHead}>
-            <span className={styles.stencil}>LOCAL</span>
-            <span className={styles.stencil}>{ZONE_LABEL}</span>
-          </div>
-
-          <span className={styles.time}>{clock ? clock.time : BLANK}</span>
-
-          <div className={styles.place}>
-            <span className={styles.city}>{CITY}</span>
-            <span className={styles.coords}>{COORDS}</span>
-          </div>
-
-          <span className={styles.ruleDot} aria-hidden="true" />
-
-          <div className={styles.day} aria-hidden="true">
-            <div className={styles.bar}>
-              {HOURS.map((hour) => (
-                <span
-                  key={hour}
-                  className={styles.cell}
-                  data-state={
-                    clock && hour === clock.hour
-                      ? "now"
-                      : awake(hour)
-                        ? "up"
-                        : "down"
-                  }
-                />
-              ))}
+            <div className={styles.modHead}>
+              <span className={styles.stencil}>LOCAL</span>
+              <span className={styles.stencil}>{ZONE_LABEL}</span>
             </div>
-            <div className={styles.ticks}>
-              {TICKS.map((tick) => (
-                <span
-                  key={tick}
-                  className={styles.tickLabel}
-                  style={{ "--t": tick } as CSSProperties}
-                >
-                  {String(tick).padStart(2, "0")}
-                </span>
-              ))}
+
+            <span className={styles.time}>{clock ? clock.time : BLANK}</span>
+
+            <div className={styles.place}>
+              <span className={styles.city}>{CITY}</span>
+              <span className={styles.coords}>{COORDS}</span>
+            </div>
+
+            <span className={styles.ruleDot} aria-hidden="true" />
+
+            <div className={styles.day} aria-hidden="true">
+              <div className={styles.bar}>
+                {HOURS.map((hour) => (
+                  <span
+                    key={hour}
+                    className={styles.cell}
+                    data-state={
+                      clock && hour === clock.hour
+                        ? "now"
+                        : awake(hour)
+                          ? "up"
+                          : "down"
+                    }
+                  />
+                ))}
+              </div>
+              <div className={styles.ticks}>
+                {TICKS.map((tick) => (
+                  <span
+                    key={tick}
+                    className={styles.tickLabel}
+                    style={{ "--t": tick } as CSSProperties}
+                  >
+                    {String(tick).padStart(2, "0")}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.status}>
+              <span className={styles.led} data-up={up} aria-hidden="true" />
+              <span className={styles.statusLabel}>
+                {clock ? (up ? "PROBABLY UP" : "PROBABLY ASLEEP") : "SYNCING"}
+              </span>
             </div>
           </div>
-
-          <div className={styles.status}>
-            <span className={styles.led} data-up={up} aria-hidden="true" />
-            <span className={styles.statusLabel}>
-              {clock ? (up ? "PROBABLY UP" : "PROBABLY ASLEEP") : "SYNCING"}
-            </span>
-          </div>
-        </div>
+        )}
       </div>
 
       <span className={styles.grill} aria-hidden="true" />
@@ -203,3 +226,5 @@ export default function Footer({ active = true }: { active?: boolean }) {
     </footer>
   );
 }
+
+export default memo(Footer);

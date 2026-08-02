@@ -95,8 +95,37 @@
   }
 
   .grid {
-    overflow-x: auto;
-    padding-bottom: 4px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .week {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .cell {
+    width: auto;
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
+
+@media (hover: none) {
+  .caption {
+    filter: none;
+    transition: opacity 620ms var(--ease-soft),
+      transform 620ms var(--ease-soft), color 760ms var(--ease-soft);
+  }
+
+  .cell {
+    transition: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .caption {
+    font-size: clamp(0.74rem, 3.2vw, 0.86rem);
   }
 }
 

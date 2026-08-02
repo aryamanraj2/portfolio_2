@@ -38,6 +38,9 @@ const TYPE_MS = 68;
 const HOLD_MS = 720;
 const MORPH_MS = 1440;
 const NAME_MS = 720;
+const CHURN_MS = 45;
+
+const SPAN = Math.max(SOURCE.length, TARGET.length);
 
 type Cell = { char: string; scrambling: boolean };
 type Phase = "terminal" | "morph" | "name" | "inflate";
@@ -58,6 +61,7 @@ export default function Landing({
   const [scrolled, setScrolled] = useState(false);
   const wash = useRef<WashHandle>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const glyphs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const tint = useCallback((key: TintKey | null) => {
     wash.current?.to(key);
@@ -92,9 +96,8 @@ export default function Landing({
 
     const morph = () =>
       new Promise<void>((resolve) => {
-        const length = Math.max(SOURCE.length, TARGET.length);
-        const specs = Array.from({ length }, (_, i) => {
-          const start = Math.min(0.52, (i / length) * 0.5) + Math.random() * 0.12;
+        const specs = Array.from({ length: SPAN }, (_, i) => {
+          const start = Math.min(0.52, (i / SPAN) * 0.5) + Math.random() * 0.12;
           return {
             from: SOURCE[i] ?? "",
             to: TARGET[i] ?? "",
@@ -104,26 +107,58 @@ export default function Landing({
           };
         });
 
-        const t0 = performance.now();
+        const churn = window.matchMedia("(hover: none)").matches ? CHURN_MS : 0;
+
+        let t0 = 0;
+        let drawn = 0;
         const tick = (now: number) => {
           if (cancelled) return;
+          const nodes = glyphs.current;
+          if (!nodes[0]) {
+            raf = requestAnimationFrame(tick);
+            return;
+          }
+          if (!t0) t0 = now;
+
+          const done = now - t0 >= MORPH_MS;
+          if (!done && now - drawn < churn) {
+            raf = requestAnimationFrame(tick);
+            return;
+          }
+          drawn = now;
+
           const p = ease(Math.min((now - t0) / MORPH_MS, 1));
-          const next = specs
-            .map((s) => {
-              if (p >= s.end) return { char: s.to, scrambling: false };
-              if (p < s.start) return { char: s.from, scrambling: false };
-              if (s.to === " ") return { char: " ", scrambling: false };
-              if (s.glyph === "" || Math.random() < 0.4) {
-                s.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+          for (let i = 0; i < SPAN; i++) {
+            const node = nodes[i];
+            if (!node) continue;
+            const s = specs[i];
+            let char = s.from;
+            let hazy = false;
+            if (p >= s.end) char = s.to;
+            else if (p >= s.start) {
+              if (s.to === " ") char = " ";
+              else {
+                if (s.glyph === "" || Math.random() < 0.4) {
+                  s.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                }
+                char = s.glyph;
+                hazy = true;
               }
-              return { char: s.glyph, scrambling: true };
-            })
-            .filter((c) => c.char !== "");
-          setCells(next);
+            }
+            if (node.firstChild) {
+              if (node.firstChild.nodeValue !== char) {
+                node.firstChild.nodeValue = char;
+              }
+            } else if (char) {
+              node.appendChild(document.createTextNode(char));
+            }
+            const cls = hazy ? styles.scramble : styles.glyph;
+            if (node.className !== cls) node.className = cls;
+          }
+
           if (now - t0 < MORPH_MS) {
             raf = requestAnimationFrame(tick);
           } else {
-            setCells(settled(TARGET));
             resolve();
           }
         };
@@ -159,6 +194,7 @@ export default function Landing({
       await morph();
       if (cancelled) return;
 
+      setCells(settled(TARGET));
       setPhase("name");
       await sleep(NAME_MS);
       if (cancelled) return;
@@ -180,20 +216,35 @@ export default function Landing({
       className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
     >
       <Wash ref={wash} />
-      {start && <Stamp active={phase === "inflate"} />}
       <div className={styles.screen}>
         <div className={styles.hero}>
           <h1 className={styles.line} aria-label={TARGET}>
             <span className={styles.srOnly}>{TARGET}</span>
-            <span className={styles.text} aria-hidden="true">
-              {cells.map((cell, i) => (
-                <span
-                  key={i}
-                  className={cell.scrambling ? styles.scramble : styles.glyph}
-                >
-                  {cell.char}
-                </span>
-              ))}
+            <span
+              key={phase === "morph" ? "morph" : "cells"}
+              className={styles.text}
+              aria-hidden="true"
+            >
+              {phase === "morph"
+                ? Array.from({ length: SPAN }, (_, i) => (
+                    <span
+                      key={i}
+                      ref={(node) => {
+                        glyphs.current[i] = node;
+                      }}
+                      className={styles.glyph}
+                    />
+                  ))
+                : cells.map((cell, i) => (
+                    <span
+                      key={i}
+                      className={
+                        cell.scrambling ? styles.scramble : styles.glyph
+                      }
+                    >
+                      {cell.char}
+                    </span>
+                  ))}
             </span>
             <span className={styles.cursor} aria-hidden="true" />
           </h1>
@@ -222,6 +273,7 @@ export default function Landing({
               </span>
             </a>
           </div>
+          {start && <Stamp active={phase === "inflate"} />}
           <GithubCalendar username={GITHUB_USER} active={phase === "inflate"} />
         </div>
         <Lore active={phase === "inflate"} />

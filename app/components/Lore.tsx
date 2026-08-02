@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Emphasis, { type Segment } from "./Emphasis";
 import { useRevealed } from "@/app/lib/useRevealed";
 import styles from "./Lore.module.css";
@@ -56,7 +57,7 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-export default function Lore({ active = true }: { active?: boolean }) {
+function Lore({ active = true }: { active?: boolean }) {
   const [note0, on0] = useRevealed<HTMLParagraphElement>();
   const [note1, on1] = useRevealed<HTMLParagraphElement>();
   const [note2, on2] = useRevealed<HTMLParagraphElement>();
@@ -125,3 +126,5 @@ export default function Lore({ active = true }: { active?: boolean }) {
     </section>
   );
 }
+
+export default memo(Lore);

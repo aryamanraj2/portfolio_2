@@ -15,6 +15,7 @@ const GAP = 2;
 const LIT_IN = 200;
 const LIT_OUT = 420;
 const REMEASURE = 160;
+const GLIDES = "(hover: hover) and (pointer: fine)";
 
 type Token =
   | { kind: "word"; text: string; base: number }
@@ -65,11 +66,14 @@ export default function Emphasis({
   useEffect(() => {
     const node = root.current;
     if (!node) return;
+    if (!window.matchMedia(GLIDES).matches) return;
 
     let alive = true;
+    let width = window.innerWidth;
 
     const flip = () => {
       if (!alive) return;
+      if (!window.matchMedia(GLIDES).matches) return;
       const items = [...node.querySelectorAll<HTMLElement>(".kwChar, .kwWord")];
       for (const el of items) el.style.removeProperty("--dx");
 
@@ -94,6 +98,8 @@ export default function Emphasis({
 
     let pending: ReturnType<typeof setTimeout>;
     const resize = () => {
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
       clearTimeout(pending);
       pending = setTimeout(flip, REMEASURE);
     };

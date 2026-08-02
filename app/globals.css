@@ -45,6 +45,12 @@ html {
   zoom: 0.85;
 }
 
+@media (max-width: 780px) {
+  html {
+    zoom: 1;
+  }
+}
+
 html,
 body {
   height: 100%;
@@ -159,6 +165,23 @@ body {
 .kwIdle .kwChar,
 .kwIdle .kwWord {
   animation-name: none;
+}
+
+@media (hover: none) {
+  .kwWord,
+  .kwChar {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .kwChar {
+    color: var(--kw-hot, var(--bone));
+    font-variation-settings: "wght" 820;
+  }
+
+  .kwChar::before {
+    content: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

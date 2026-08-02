@@ -416,10 +416,32 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (hover: none) {
+  .projects {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 110vh;
+  }
+
+  .projects,
   .row {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    filter: none;
+    transition: opacity 620ms var(--ease-soft),
+      transform 620ms var(--ease-soft), border-color 720ms var(--ease-soft);
+  }
+
+  .active .row:nth-child(1) {
+    transition-delay: 620ms, 620ms, 0ms;
+  }
+
+  .active .row:nth-child(2) {
+    transition-delay: 700ms, 700ms, 0ms;
+  }
+
+  .active .row:nth-child(3) {
+    transition-delay: 780ms, 780ms, 0ms;
+  }
+
+  .row {
     cursor: default;
   }
 
@@ -428,48 +450,100 @@
     display: none;
   }
 
+  .head,
+  .index,
+  .reveal {
+    transition: none;
+  }
+
+  .row .name,
+  .row.open .name {
+    color: var(--lite, var(--bone));
+    opacity: 1;
+    font-variation-settings: "wght" 900;
+    transform: none;
+    transition: none;
+  }
+
+  .row .reveal,
+  .row.open .reveal {
+    grid-template-rows: 1fr;
+    transition: none;
+  }
+
+  .row .note,
+  .row.open .note {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .row .stack,
+  .row.open .stack {
+    opacity: 1;
+    overflow: visible;
+    transform: none;
+    transition: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .track,
+  .row.open .track {
+    width: 100%;
+    flex-wrap: wrap;
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .seq {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    min-width: 0;
+    row-gap: clamp(8px, 2.4vw, 12px);
+  }
+
+  .seq ~ .seq {
+    display: none;
+  }
+
+  .row .cue,
+  .row.open .cue {
+    opacity: 0.62;
+    transform: none;
+    transition: none;
+  }
+
+  .chip {
+    transition: none;
+  }
+
+  .chip:last-child {
+    padding-right: 0;
+  }
+
+  .chip:last-child .dot {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: clamp(18px, 5vw, 26px) 0;
+  }
+
   .index {
     justify-self: start;
     padding-top: 0;
   }
 
-  .board.focused .row:not(.open) .head {
-    opacity: 1;
-  }
-
-  .row .name {
-    color: var(--lite, var(--bone));
-    transform: none;
-    opacity: 1;
-    font-variation-settings: "wght" 900;
-  }
-
-  .row .index,
-  .row .chip {
-    color: var(--lite, var(--bone));
-  }
-
-  .row .cue {
-    opacity: 0.62;
-    transform: none;
-  }
-
-  .row .reveal {
-    grid-template-rows: 1fr;
-  }
-
-  .row .note {
-    opacity: 1;
-    transform: none;
-  }
-
-  .row .stack {
-    opacity: 1;
-    transform: none;
-  }
-
-  .row .track {
-    animation-play-state: running;
+  .cue {
+    top: calc(clamp(18px, 5vw, 26px) + 0.1em);
+    bottom: auto;
+    font-size: clamp(0.6rem, 2.9vw, 0.7rem);
   }
 
   .detail {
@@ -477,22 +551,18 @@
     padding-left: 0;
   }
 
-  .note :global(.kwChar),
-  .note :global(.kwWord) {
-    animation: none !important;
-    transform: none !important;
+  .note {
+    font-size: clamp(0.92rem, 3.9vw, 1.02rem);
   }
 
-  .note :global(.kwChar) {
-    color: var(--kw-hot) !important;
-    font-variation-settings: "wght" 820 !important;
+  .chip {
+    font-size: clamp(0.7rem, 3.1vw, 0.8rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .projects,
-  .row,
-  .more {
+  .row {
     transition: opacity 200ms linear;
     transform: none;
     filter: none;
@@ -503,10 +573,7 @@
   .row::after,
   .head,
   .index,
-  .reveal,
-  .moreIcon,
-  .moreLabel,
-  .moreLabel::after {
+  .reveal {
     transition: none;
   }
 

@@ -3,6 +3,7 @@
   inset: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
@@ -65,7 +66,7 @@
     -webkit-text-stroke-color 820ms var(--ease-soft),
     color 820ms var(--ease-soft),
     filter 1100ms var(--ease-soft);
-  will-change: font-variation-settings, transform, filter;
+  will-change: font-variation-settings, transform;
 }
 
 :global(html[data-tint="wandr"]) .inflate .line {
@@ -336,6 +337,50 @@
     flex-direction: column;
     align-items: flex-start;
     gap: clamp(20px, 6vw, 32px);
+  }
+}
+
+@media (hover: none) {
+  .line {
+    transition: font-variation-settings 620ms var(--ease-soft),
+      color 820ms var(--ease-soft);
+    will-change: auto;
+  }
+
+  .morph .line,
+  .name .line,
+  .inflate .line {
+    transform: none;
+  }
+
+  .terminal .line,
+  .morph .line,
+  .name .line,
+  .inflate .line {
+    letter-spacing: -0.01em;
+  }
+
+  .tagline,
+  .description,
+  .cta {
+    filter: none;
+    transition: opacity 620ms var(--ease-soft),
+      transform 620ms var(--ease-soft), color 760ms var(--ease-soft);
+  }
+}
+
+@media (max-width: 560px) {
+  .line {
+    font-size: min(9.6vw, 6.6rem);
+  }
+
+  .footer {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: clamp(12px, 4vw, 24px);
+    row-gap: clamp(20px, 6vw, 32px);
   }
 }
 

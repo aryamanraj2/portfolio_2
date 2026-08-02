@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import styles from "./GithubCalendar.module.css";
 
 type Level =
@@ -58,7 +58,12 @@ const fmt = (iso: string) =>
     year: "numeric",
   });
 
-export default function GithubCalendar({
+const SPANS = [
+  { query: "(max-width: 560px)", weeks: 20 },
+  { query: "(max-width: 720px)", weeks: 30 },
+];
+
+function GithubCalendar({
   username,
   active = true,
 }: {
@@ -67,6 +72,19 @@ export default function GithubCalendar({
 }) {
   const [data, setData] = useState<Data | null>(null);
   const [failed, setFailed] = useState(false);
+  const [weeks, setWeeks] = useState(0);
+
+  useEffect(() => {
+    const lists = SPANS.map((span) => window.matchMedia(span.query));
+    const sync = () => {
+      const hit = SPANS.findIndex((_, i) => lists[i].matches);
+      setWeeks(hit === -1 ? 0 : SPANS[hit].weeks);
+    };
+    sync();
+    lists.forEach((list) => list.addEventListener("change", sync));
+    return () =>
+      lists.forEach((list) => list.removeEventListener("change", sync));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -98,13 +116,17 @@ export default function GithubCalendar({
 
   if (failed || !data) return null;
 
+  const shown = weeks
+    ? data.contributions.slice(-weeks)
+    : data.contributions;
+
   return (
     <figure className={`${styles.root} ${active ? styles.active : ""}`}>
       <figcaption className={styles.caption}>
         {data.totalContributions.toLocaleString()} contributions · last year
       </figcaption>
       <div className={styles.grid} aria-hidden="true">
-        {data.contributions.map((week, wi) => (
+        {shown.map((week, wi) => (
           <div key={wi} className={styles.week}>
             {week.map((day) => (
               <span
@@ -119,3 +141,5 @@ export default function GithubCalendar({
     </figure>
   );
 }
+
+export default memo(GithubCalendar);

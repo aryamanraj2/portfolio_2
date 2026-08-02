@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  memo,
   useCallback,
   useEffect,
   useRef,
@@ -86,7 +87,9 @@ const PROJECTS: Project[] = [
   },
 ];
 
-const TAP = "(pointer: coarse) and (min-width: 561px)";
+const TAP = "(pointer: coarse)";
+
+const tapping = () => window.matchMedia(TAP).matches;
 
 const MARQUEE_COPIES = [0, 1, 2, 3];
 const SECONDS_PER_ITEM = 5.3;
@@ -109,6 +112,7 @@ const TechStrip = ({ tech, open }: { tech: string[]; open: boolean }) => {
     if (!open || spent.current) return;
     spent.current = true;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (tapping()) return;
     setSpinning(true);
   }, [open]);
 
@@ -183,7 +187,7 @@ const TechStrip = ({ tech, open }: { tech: string[]; open: boolean }) => {
   );
 };
 
-export default function Projects({
+function Projects({
   active = true,
   onTint,
 }: {
@@ -196,6 +200,7 @@ export default function Projects({
 
   const reach = useCallback((index: number | null) => {
     setOpen(index);
+    if (tapping()) return;
     tint.current?.(index === null ? null : PROJECTS[index].tint);
   }, []);
 
@@ -217,8 +222,11 @@ export default function Projects({
         </header>
         <div
           className={`${styles.board} ${open !== null ? styles.focused : ""}`}
-          onMouseLeave={() => reach(null)}
+          onMouseLeave={() => {
+            if (!tapping()) reach(null);
+          }}
           onBlur={(event) => {
+            if (tapping()) return;
             if (!event.currentTarget.contains(event.relatedTarget)) reach(null);
           }}
         >
@@ -231,14 +239,13 @@ export default function Projects({
               className={`${styles.row} ${index === open ? styles.open : ""}`}
               style={{ "--lite": project.lite } as CSSProperties}
               aria-expanded={index === open}
-              onMouseEnter={() => reach(index)}
-              onFocus={() => reach(index)}
-              onClick={(event) => {
-                if (index !== open && window.matchMedia(TAP).matches) {
-                  event.preventDefault();
-                }
-                reach(index);
+              onMouseEnter={() => {
+                if (!tapping()) reach(index);
               }}
+              onFocus={() => {
+                if (!tapping()) reach(index);
+              }}
+              onClick={() => reach(index)}
             >
               <span className={styles.cue} aria-hidden="true">
                 Repo ↗
@@ -271,3 +278,5 @@ export default function Projects({
     </section>
   );
 }
+
+export default memo(Projects);

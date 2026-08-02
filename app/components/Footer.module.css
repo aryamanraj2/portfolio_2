@@ -552,6 +552,36 @@
   }
 }
 
+@media (hover: none) {
+  .panel {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 100vh;
+    filter: none;
+    transition: opacity 620ms var(--ease-soft),
+      transform 620ms var(--ease-soft), color 760ms var(--ease-soft);
+  }
+}
+
+@media (max-width: 560px) {
+  .panel {
+    gap: clamp(16px, 4vw, 24px);
+    margin-top: clamp(36px, 12vw, 64px);
+  }
+
+  .kicker,
+  .portLabel {
+    font-size: clamp(0.66rem, 2.9vw, 0.76rem);
+  }
+
+  .stencil {
+    font-size: clamp(0.56rem, 2.5vw, 0.64rem);
+  }
+
+  .grill {
+    height: clamp(30px, 9vw, 46px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .panel,
   .panel.active {

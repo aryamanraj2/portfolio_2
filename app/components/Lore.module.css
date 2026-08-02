@@ -451,6 +451,27 @@
   }
 }
 
+@media (hover: none) {
+  .lore {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 120vh;
+  }
+
+  .lore,
+  .entry,
+  .achievementNode,
+  .achievementCard {
+    filter: none;
+    transition: opacity 620ms var(--ease-soft), transform 620ms var(--ease-soft);
+  }
+}
+
+@media (max-width: 560px) {
+  .note {
+    font-size: clamp(0.92rem, 3.9vw, 1.02rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lore,
   .entry,
