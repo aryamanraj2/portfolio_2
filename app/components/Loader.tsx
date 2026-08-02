@@ -31,6 +31,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 const DURATION = 2800;
 const GREET_INTERVAL = 460;
+const SAFETY = 250;
 
 export default function Loader({ onDone }: { onDone?: () => void }) {
   const [pct, setPct] = useState(0);
@@ -44,8 +45,19 @@ export default function Loader({ onDone }: { onDone?: () => void }) {
 
   useEffect(() => {
     let raf = 0;
+    let done = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
     const start = performance.now();
     const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      cancelAnimationFrame(raf);
+      setPct(100);
+      timers.push(setTimeout(() => setLeaving(true), 320));
+      timers.push(setTimeout(() => onDone?.(), 320 + 900));
+    };
 
     const step = (now: number) => {
       const t = Math.min((now - start) / DURATION, 1);
@@ -53,12 +65,16 @@ export default function Loader({ onDone }: { onDone?: () => void }) {
       if (t < 1) {
         raf = requestAnimationFrame(step);
       } else {
-        setTimeout(() => setLeaving(true), 320);
-        setTimeout(() => onDone?.(), 320 + 900);
+        finish();
       }
     };
     raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    timers.push(setTimeout(finish, DURATION + SAFETY));
+
+    return () => {
+      cancelAnimationFrame(raf);
+      timers.forEach(clearTimeout);
+    };
   }, [onDone]);
 
   useEffect(() => {

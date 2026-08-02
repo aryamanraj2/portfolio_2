@@ -39,6 +39,7 @@ const HOLD_MS = 720;
 const MORPH_MS = 1440;
 const NAME_MS = 720;
 const CHURN_MS = 45;
+const SAFETY = 250;
 
 const SPAN = Math.max(SOURCE.length, TARGET.length);
 
@@ -96,6 +97,14 @@ export default function Landing({
 
     const morph = () =>
       new Promise<void>((resolve) => {
+        let settled = false;
+        const settle = () => {
+          if (settled) return;
+          settled = true;
+          cancelAnimationFrame(raf);
+          resolve();
+        };
+
         const specs = Array.from({ length: SPAN }, (_, i) => {
           const start = Math.min(0.52, (i / SPAN) * 0.5) + Math.random() * 0.12;
           return {
@@ -159,10 +168,11 @@ export default function Landing({
           if (now - t0 < MORPH_MS) {
             raf = requestAnimationFrame(tick);
           } else {
-            resolve();
+            settle();
           }
         };
         raf = requestAnimationFrame(tick);
+        timers.push(setTimeout(settle, MORPH_MS + SAFETY));
       });
 
     const run = async () => {
