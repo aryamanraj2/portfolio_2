@@ -16,7 +16,7 @@ export const TWITTER_HANDLE = "@aryamaaaann";
 
 export const SOCIALS = [
   "https://github.com/aryamanraj2",
-  "https://www.linkedin.com/in/aryaman-jaiswal250",
+  "https://www.linkedin.com/in/aryamanrajjaiswal",
   "https://x.com/aryamaaaann",
   "https://www.instagram.com/aryamanj_/",
 ];

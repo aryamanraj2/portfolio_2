@@ -24,8 +24,8 @@ const PORTS = [
   { label: "PHONE", handle: PHONE, href: "tel:+919136816530", out: false },
   {
     label: "LINKEDIN",
-    handle: "/in/aryaman-jaiswal250",
-    href: "https://www.linkedin.com/in/aryaman-jaiswal250",
+    handle: "/in/aryamanrajjaiswal",
+    href: "https://www.linkedin.com/in/aryamanrajjaiswal",
     out: true,
   },
   {
