@@ -1,0 +1,234 @@
+.page {
+  --bg: var(--ink);
+  --fg: var(--bone);
+  --rule: color-mix(in srgb, var(--fg) 20%, transparent);
+  --pad: clamp(24px, 5vw, 64px);
+  --gap: clamp(56px, 9vh, 120px);
+
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  color: var(--fg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--hot) transparent;
+}
+
+.page::-webkit-scrollbar {
+  width: 10px;
+}
+
+.page::-webkit-scrollbar-track {
+  background: transparent;
+  border-left: 1px solid var(--rule);
+}
+
+.page::-webkit-scrollbar-thumb {
+  background: var(--hot);
+}
+
+.invert {
+  --bg: var(--hot);
+  --fg: var(--hot-ink);
+  --rule: color-mix(in srgb, var(--fg) 30%, transparent);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.section {
+  padding: var(--gap) var(--pad);
+  border-top: 1px solid var(--rule);
+}
+
+.section:first-of-type {
+  border-top: 0;
+}
+
+.tail {
+  padding-bottom: clamp(24px, 3vh, 36px);
+}
+
+.tail .head {
+  margin-bottom: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: clamp(28px, 4vh, 48px);
+  font-size: 0.72rem;
+  font-variation-settings: "wght" 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.headNum {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.masthead {
+  padding: clamp(40px, 7vh, 88px) var(--pad) var(--gap);
+}
+
+.part {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
+}
+
+.wordmark {
+  margin: clamp(12px, 2vh, 24px) 0 0;
+  font-size: clamp(3.2rem, 13vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wght" 300;
+}
+
+.claim {
+  max-width: 20ch;
+  margin: clamp(20px, 3vh, 36px) 0 0;
+  font-size: clamp(1.1rem, 2.4vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  font-variation-settings: "wght" 900;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(24px, 4vh, 44px);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+}
+
+.meta li + li::before {
+  content: "/";
+  margin-right: 10px;
+  color: var(--rule);
+}
+
+.awards {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.awards li::before {
+  content: "✳";
+  margin-right: 10px;
+  color: var(--hot);
+}
+
+.repo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  margin: 0 var(--pad);
+  border: 1px solid var(--hot);
+  background: var(--hot);
+  color: var(--hot-ink);
+  text-decoration: none;
+  transition: background 240ms var(--ease-soft), color 240ms var(--ease-soft);
+}
+
+.repoLabel {
+  display: flex;
+  align-items: center;
+  min-height: 72px;
+  padding: 0 clamp(20px, 3vw, 36px);
+  font-size: clamp(0.9rem, 1.6vw, 1.15rem);
+  font-variation-settings: "wght" 900;
+  letter-spacing: 0.08em;
+}
+
+.repoHost {
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(16px, 2.4vw, 28px);
+  border-left: 1px solid currentColor;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+}
+
+.note {
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.9vw, 1.28rem);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+}
+
+.void {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78vh;
+  padding: var(--pad);
+  border-top: 1px solid var(--rule);
+}
+
+.voidMark {
+  width: clamp(120px, 22vw, 260px);
+  aspect-ratio: 1;
+  border: 1px solid var(--fg);
+}
+
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  padding: clamp(32px, 5vh, 56px) var(--pad) clamp(48px, 8vh, 96px);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.colophon a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 780px) {
+  .repo {
+    grid-template-columns: 1fr;
+  }
+
+  .repoHost {
+    min-height: 48px;
+    border-left: 0;
+    border-top: 1px solid currentColor;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .repo:hover,
+  .repo:focus-visible {
+    background: transparent;
+    color: var(--hot);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repo {
+    transition: none;
+  }
+}

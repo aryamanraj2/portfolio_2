@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { SITE_URL } from "./lib/site";
+import { APPS } from "./lib/apps";
 
 const resumeStamp = () => {
   try {
@@ -22,6 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
+    ...APPS.map((app) => ({
+      url: `${SITE_URL}/apps/${app.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     {
       url: `${SITE_URL}/resume`,
       lastModified: resume,

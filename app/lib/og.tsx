@@ -47,7 +47,7 @@ const load = async (): Promise<Face[]> => {
 let cached: Promise<Face[]> | null = null;
 const satoshi = () => (cached ??= load());
 
-export async function ogCard(sub: string) {
+export async function ogCard(sub: string, head: string = GREETING) {
   const faces = await satoshi();
   const family = faces.length ? "Satoshi" : "sans-serif";
 
@@ -78,7 +78,7 @@ export async function ogCard(sub: string) {
               lineHeight: 1,
             }}
           >
-            {GREETING}
+            {head}
           </div>
           <div
             style={{

@@ -8,84 +8,11 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import Link from "next/link";
 import styles from "./Projects.module.css";
-import Emphasis, { type Segment } from "./Emphasis";
+import Emphasis from "./Emphasis";
 import { type TintKey } from "./Wash";
-
-type Project = {
-  title: string;
-  tint: TintKey;
-  lite: string;
-  repo: string;
-  tech: string[];
-  note: Segment[];
-};
-
-const PROJECTS: Project[] = [
-  {
-    title: "Wandr",
-    tint: "wandr",
-    lite: "var(--wandr-lite)",
-    repo: "https://github.com/aryamanraj2/Wandr",
-    tech: [
-      "Swift",
-      "SwiftUI",
-      "Foundation Models",
-      "App Intents",
-      "Natural Language",
-      "Evaluations Framework",
-    ],
-    note: [
-      "Turns a group chat into ",
-      { kw: "a decided night out" },
-      ". A seven-stage pipeline pulls intent from a Siri summary, researches live venues, and resolves conflicts down a constraint ladder that relaxes budget before it ever touches dietary or accessibility. The model only ranks; deterministic code alone mints the plan, and the chat itself is never stored.",
-    ],
-  },
-  {
-    title: "Saldo",
-    tint: "saldo",
-    lite: "var(--saldo-lite)",
-    repo: "https://github.com/aryamanraj2/Saldo",
-    tech: [
-      "Swift",
-      "SwiftUI",
-      "Vision",
-      "Natural Language",
-      "Foundation Models",
-    ],
-    note: [
-      "A student budgeting app that ",
-      { kw: "reacts to your balance" },
-      " — a theming engine maps what is left to a palette and repaints the whole interface as the number moves. Receipts are read straight off the camera, goal images are cut from their background on device, and every insight is computed against a store that never leaves the phone. It won Apple's ",
-      { kw: "Swift Student Challenge 2026" },
-      ".",
-    ],
-  },
-  {
-    title: "AquaSense",
-    tint: "aqua",
-    lite: "var(--aqua-lite)",
-    repo: "https://devfolio.co/projects/aquacult-5794",
-    tech: [
-      "Swift",
-      "Vision",
-      "LangChain",
-      "Flask",
-      "Gemini API",
-      "Random Forest",
-      "Kotlin",
-    ],
-    note: [
-      "Aquarium care where ",
-      { kw: "the classifier owns the verdict" },
-      " and the model only explains it — water readings are scored first, so the language layer can phrase a result but never invent one. Three routable specialists split the work: live telemetry, image diagnosis from a photo of the fish, and a remediation cart assembled from whatever just got flagged. It took ",
-      { kw: "Best Overall Project" },
-      " and ",
-      { kw: "Best Use of Gemini" },
-      " at an MLH hackathon, with a runner-up finish for UI/UX.",
-    ],
-  },
-];
+import { APPS } from "@/app/lib/apps";
 
 const TAP = "(pointer: coarse)";
 
@@ -201,7 +128,7 @@ function Projects({
   const reach = useCallback((index: number | null) => {
     setOpen(index);
     if (tapping()) return;
-    tint.current?.(index === null ? null : PROJECTS[index].tint);
+    tint.current?.(index === null ? null : APPS[index].tint);
   }, []);
 
   useEffect(() => {
@@ -230,10 +157,10 @@ function Projects({
             if (!event.currentTarget.contains(event.relatedTarget)) reach(null);
           }}
         >
-          {PROJECTS.map((project, index) => (
-            <a
+          {APPS.map((project, index) => (
+            <Link
               key={project.title}
-              href={project.repo}
+              href={`/apps/${project.slug}`}
               target="_blank"
               rel="noreferrer noopener"
               className={`${styles.row} ${index === open ? styles.open : ""}`}
@@ -248,7 +175,7 @@ function Projects({
               onClick={() => reach(index)}
             >
               <span className={styles.cue} aria-hidden="true">
-                Repo ↗
+                Spec ↗
               </span>
               <span className={styles.index}>
                 {(index + 1).toString().padStart(2, "0")}
@@ -271,7 +198,7 @@ function Projects({
                   </span>
                 </span>
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

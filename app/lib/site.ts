@@ -1,3 +1,5 @@
+import type { App } from "./apps";
+
 export const SITE_URL = "https://aryamanj.in";
 
 export const NAME = "Aryaman Jaiswal";
@@ -57,7 +59,8 @@ const projects = [
     "@type": "SoftwareApplication",
     "@id": `${SITE_URL}/#wandr`,
     name: "Wandr",
-    url: "https://github.com/aryamanraj2/Wandr",
+    url: `${SITE_URL}/apps/wandr`,
+    sameAs: ["https://github.com/aryamanraj2/Wandr"],
     applicationCategory: "LifestyleApplication",
     operatingSystem: "iOS",
     author: { "@id": PERSON_ID },
@@ -76,7 +79,8 @@ const projects = [
     "@type": "SoftwareApplication",
     "@id": `${SITE_URL}/#saldo`,
     name: "Saldo",
-    url: "https://github.com/aryamanraj2/Saldo",
+    url: `${SITE_URL}/apps/saldo`,
+    sameAs: ["https://github.com/aryamanraj2/Saldo"],
     applicationCategory: "FinanceApplication",
     operatingSystem: "iOS",
     author: { "@id": PERSON_ID },
@@ -90,7 +94,8 @@ const projects = [
     "@type": "SoftwareApplication",
     "@id": `${SITE_URL}/#aquasense`,
     name: "AquaSense",
-    url: "https://devfolio.co/projects/aquacult-5794",
+    url: `${SITE_URL}/apps/aquasense`,
+    sameAs: ["https://devfolio.co/projects/aquacult-5794"],
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "iOS, Android",
     author: { "@id": PERSON_ID },
@@ -234,6 +239,42 @@ export const homeJsonLd = () => ({
     ...projects,
   ],
 });
+
+export const appJsonLd = (app: App, summary: string) => {
+  const pageId = `${SITE_URL}/apps/${app.slug}#webpage`;
+  const entry = projects.find(
+    (project) => project["@id"] === `${SITE_URL}/#${app.slug}`,
+  );
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": pageId,
+        url: `${SITE_URL}/apps/${app.slug}`,
+        name: `${app.title} — ${NAME}`,
+        description: summary,
+        isPartOf: { "@id": WEBSITE_ID },
+        about: { "@id": `${SITE_URL}/#${app.slug}` },
+        mainEntity: { "@id": `${SITE_URL}/#${app.slug}` },
+        inLanguage: "en",
+        primaryImageOfPage: { "@id": IMAGE_ID },
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: NAME, item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: app.title },
+          ],
+        },
+      },
+      ...(entry ? [{ ...entry, mainEntityOfPage: { "@id": pageId } }] : []),
+      person,
+      image,
+      website,
+    ],
+  };
+};
 
 export const resumeJsonLd = (summary: string) => ({
   "@context": "https://schema.org",

@@ -1,0 +1,51 @@
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 48px;
+  padding: 0 clamp(24px, 5vw, 64px);
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+}
+
+.back {
+  color: inherit;
+  text-underline-offset: 3px;
+  transition: color 200ms var(--ease-soft);
+}
+
+.stamp {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.count {
+  color: var(--hot);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    color: var(--hot);
+  }
+}
+
+@media (max-width: 480px) {
+  .rail {
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back {
+    transition: none;
+  }
+}

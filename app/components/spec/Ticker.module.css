@@ -1,0 +1,67 @@
+.ticker {
+  overflow: hidden;
+  padding: clamp(14px, 2vh, 22px) 0;
+  border-bottom: 1px solid var(--rule);
+  user-select: none;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: drift var(--dur, 44s) linear infinite;
+}
+
+.seq {
+  display: flex;
+  flex: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+  padding-right: clamp(20px, 4vw, 56px);
+  white-space: nowrap;
+  font-size: clamp(0.82rem, 1.5vw, 1.05rem);
+  font-variation-settings: "wght" 900;
+  letter-spacing: 0.08em;
+}
+
+.star {
+  font-variation-settings: "wght" 500;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ticker:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+@media (hover: none) {
+  .track {
+    animation: none;
+  }
+
+  .seq ~ .seq {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .seq ~ .seq {
+    display: none;
+  }
+}

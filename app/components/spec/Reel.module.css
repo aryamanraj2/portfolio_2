@@ -1,0 +1,91 @@
+.reel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  max-width: 1000px;
+}
+
+.stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+button.stage {
+  cursor: pointer;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 26px;
+  background: var(--hot);
+  color: var(--hot-ink);
+  font-size: 0.72rem;
+  font-variation-settings: "wght" 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: opacity 200ms var(--ease-soft);
+}
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px 24px;
+  font-size: 0.92rem;
+  letter-spacing: -0.005em;
+}
+
+.runtime {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--hot);
+}
+
+.note {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.marker {
+  color: var(--hot);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button.stage:hover .play,
+  button.stage:focus-visible .play {
+    opacity: 0.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play {
+    transition: none;
+  }
+}
