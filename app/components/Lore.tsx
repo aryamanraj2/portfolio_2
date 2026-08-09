@@ -16,7 +16,7 @@ const ENTRIES: Entry[] = [
   {
     company: "Bharti Airtel",
     role: "SDE Intern",
-    period: "June 2026 - Present",
+    period: "June 2026 - August 2028",
     note: [
       "Re-architected an internal platform tracking live and historical state across a distributed VM fleet, cutting dashboard query latency by ",
       { kw: "30%" },
