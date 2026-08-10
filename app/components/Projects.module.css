@@ -266,7 +266,7 @@
 .note {
   --kw-rest: color-mix(in srgb, var(--lite, var(--bone)) 54%, transparent);
   --kw-hot: var(--lite, var(--bone));
-  --kw-step: 12ms;
+  --kw-tick: 12ms;
   --kw-play: running;
   display: block;
   color: var(--kw-rest);

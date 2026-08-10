@@ -15,6 +15,7 @@ const GAP = 2;
 const LIT_IN = 200;
 const LIT_OUT = 420;
 const REMEASURE = 160;
+const SWEEP = 560;
 const GLIDES = "(hover: hover) and (pointer: fine)";
 
 type Token =
@@ -23,7 +24,7 @@ type Token =
 
 type Node = { kind: "space"; text: string } | { kind: "cluster"; items: Token[] };
 
-const build = (parts: Segment[]): Node[] => {
+const build = (parts: Segment[]): { nodes: Node[]; span: number } => {
   const nodes: Node[] = [];
   let step = 0;
   let lead = 0;
@@ -50,7 +51,7 @@ const build = (parts: Segment[]): Node[] => {
     step += chars.length + GAP;
   }
 
-  return nodes;
+  return { nodes, span: Math.max(step - GAP, 0) };
 };
 
 export default function Emphasis({
@@ -145,7 +146,12 @@ export default function Emphasis({
         </span>
       );
 
-    return build(parts).map((node, idx) => {
+    const { nodes, span } = build(parts);
+    const step = span
+      ? `min(var(--kw-tick, 22ms), calc(${SWEEP}ms / ${span}))`
+      : undefined;
+
+    const flow = nodes.map((node, idx) => {
       if (node.kind === "space") {
         return <Fragment key={idx}>{node.text}</Fragment>;
       }
@@ -158,14 +164,17 @@ export default function Emphasis({
         </span>
       );
     });
+
+    return { flow, step };
   }, [parts]);
 
   return (
     <span
       ref={root}
       className={play === undefined || lit ? "kwRun" : "kwRun kwIdle"}
+      style={{ "--kw-step": content.step } as CSSProperties}
     >
-      {content}
+      {content.flow}
     </span>
   );
 }

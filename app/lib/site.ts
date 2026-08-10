@@ -78,13 +78,22 @@ const projects = [
     name: "Saldo",
     url: "https://github.com/aryamanraj2/Saldo",
     applicationCategory: "FinanceApplication",
-    operatingSystem: "iOS",
+    operatingSystem: "iOS, Android",
     author: { "@id": PERSON_ID },
     creator: { "@id": PERSON_ID },
     description:
-      "A student budgeting app for iOS that reacts to your balance: a theming engine maps what is left to a palette and repaints the interface as the number moves. Receipts are read off the camera and every insight is computed on device. Winner of Apple's Swift Student Challenge 2026.",
+      "A student budgeting app that reacts to your balance: a theming engine maps what is left to a palette and repaints the interface as the number moves. Receipts are read off the camera and every insight is computed on device. Winner of Apple's Swift Student Challenge 2026. Conceived as an iOS project, with a native Android version that builds the ledger from bank alerts already sitting in your messages.",
     award: "Winner, Apple Swift Student Challenge 2026",
-    keywords: ["Swift", "SwiftUI", "Vision", "Natural Language", "Foundation Models"],
+    keywords: [
+      "Swift",
+      "SwiftUI",
+      "Vision",
+      "Natural Language",
+      "Foundation Models",
+      "Kotlin",
+      "Jetpack Compose",
+      "Room",
+    ],
   },
   {
     "@type": "SoftwareApplication",
@@ -96,12 +105,21 @@ const projects = [
     author: { "@id": PERSON_ID },
     creator: { "@id": PERSON_ID },
     description:
-      "Aquarium care where a classifier owns the verdict and the language model only explains it. Three routable specialists split live telemetry, image diagnosis of the fish, and a remediation cart. Best Overall Project and Best Use of Gemini at an MLH hackathon.",
+      "Aquarium care where a classifier owns the verdict and the language model only explains it. Three routable specialists split live telemetry, image diagnosis of the fish, and a remediation cart. It ships as a native Android app too, with a voice assistant and an offline copy of the tank. Best Overall Project and Best Use of Gemini at an MLH hackathon.",
     award: [
       "Best Overall Project, MLH Hackathon",
       "Best Use of Gemini, MLH Hackathon",
     ],
-    keywords: ["Swift", "Vision", "LangChain", "Flask", "Gemini API", "Kotlin"],
+    keywords: [
+      "Swift",
+      "Vision",
+      "LangChain",
+      "Flask",
+      "Gemini API",
+      "Kotlin",
+      "Jetpack Compose",
+      "CameraX",
+    ],
   },
 ];
 
