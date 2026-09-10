@@ -82,6 +82,12 @@ export default function Landing({
   }, []);
 
   useEffect(() => {
+    const node = rootRef.current;
+    if (!node || phase === "inflate") return;
+    node.scrollTop = 0;
+  }, [phase]);
+
+  useEffect(() => {
     if (!start) return;
 
     let cancelled = false;
@@ -223,7 +229,9 @@ export default function Landing({
   return (
     <div
       ref={rootRef}
-      className={`${styles.root} ${styles[phase]} ${enter ? styles.enter : ""}`}
+      className={`${styles.root} ${styles[phase]} ${
+        phase === "inflate" ? "" : styles.locked
+      } ${enter ? styles.enter : ""}`}
     >
       <Wash ref={wash} />
       <div className={styles.screen}>
